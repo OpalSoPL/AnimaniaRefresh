@@ -1,0 +1,81 @@
+{
+    "display": {
+        "icon": {
+            "item": "animania:entity_egg_foal_draft"
+        },
+        "title": {
+            "translate": "advancements.animania.draft.title"
+        },
+        "description": {
+            "translate": "advancements.animania.draft.description"
+        }
+    },
+    "parent": "animania:animania/root",
+    "criteria": {
+        "foal": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:wheat"},
+				"entity": "animania:foal_draft"
+            }
+        },
+        "foal1": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:carrot"},
+                "entity": "animania:foal_draft"
+            }
+        },
+        "foal2": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:apple"},
+                "entity": "animania:foal_draft"
+            }
+        },
+		"mare": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:wheat"},
+				"entity": "animania:mare_draft"
+            }
+        },
+        "mare1": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:carrot"},
+                "entity": "animania:mare_draft"
+            }
+        },
+        "mare2": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:apple"},
+                "entity": "animania:mare_draft"
+            }
+        },
+		 "stallion": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:carrot"},
+				"entity": "animania:stallion_draft"
+            }
+        },
+         "stallion1": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:wheat"},
+                "entity": "animania:stallion_draft"
+            }
+        },
+         "stallion2": {
+            "trigger": "animania:feed_animal",
+            "conditions": {
+                "itemstack": {"item": "minecraft:apple"},
+                "entity": "animania:stallion_draft"
+            }
+        }
+    },
+	"requirements": [["stallion", "mare", "foal", "stallion1", "mare1", "foal1", "stallion2", "mare2", "foal2"]]
+
+}

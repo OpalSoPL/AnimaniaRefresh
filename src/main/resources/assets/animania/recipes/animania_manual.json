@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "animania:animania_manual"
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "ore": "listAllseed",
+      "type": "forge:ore_dict"
+    },
+    {
+      "item": "animania:block_straw"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

@@ -1,0 +1,29 @@
+{
+  "result": {
+    "item": "animania:milk_bottle",
+    "count": 4
+  },
+  "type": "minecraft:crafting_shapeless",
+   "ingredients": [
+	[	
+      {
+         "item": "#ANY_MILK"
+      },
+	  {
+         "item": "minecraft:milk_bucket"
+      }
+	],
+	  {
+         "item": "minecraft:glass_bottle"
+      },
+	   {
+         "item": "minecraft:glass_bottle"
+      },
+	   {
+         "item": "minecraft:glass_bottle"
+      },
+	   {
+         "item": "minecraft:glass_bottle"
+      }
+   ]
+}

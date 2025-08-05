@@ -1,0 +1,4 @@
+{
+"combo": {"animania": "master","sounds": [{"name": "animania:combo","stream": false}]},
+"zap": {"animania": "master","sounds": [{"name": "animania:zap","stream": false}]}
+}

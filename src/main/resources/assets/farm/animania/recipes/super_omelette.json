@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "animania:super_omelette"
+  },
+  "ingredients": [
+    {
+      "item": "animania:plain_omelette"
+    },
+    {
+      "ore": "foodBaconCooked",
+      "type": "forge:ore_dict"
+    },
+    {
+      "item": "animania:truffle"
+    },
+    {
+      "ore": "foodCheese",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

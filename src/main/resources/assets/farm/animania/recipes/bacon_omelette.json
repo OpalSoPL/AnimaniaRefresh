@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "animania:bacon_omelette"
+  },
+  "ingredients": [
+    {
+      "item": "animania:plain_omelette"
+    },
+    {
+      "ore": "foodBaconCooked",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}
