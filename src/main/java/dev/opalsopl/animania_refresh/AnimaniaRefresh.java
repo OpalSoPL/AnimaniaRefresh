@@ -3,11 +3,9 @@ package dev.opalsopl.animania_refresh;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -44,18 +42,44 @@ public class AnimaniaRefresh {
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "animania_refresh" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
+    //region items registry
     // Creates a new Block with the id "animania_refresh:example_block", combining the namespace and path
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
     // Creates a new BlockItem with the id "animania_refresh:example_block", combining the namespace and path
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
-
     // Creates a new food item with the id "animania_refresh:example_id", nutrition 1 and saturation 2
-    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(1).saturationMod(2f).build())));
+    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () ->
+            new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(1).saturationMod(2f).build())));
+    //endregion
 
     // Creates a creative tab with the id "animania_refresh:example_tab" for the example item, that is placed after the combat tab
-    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).icon(() -> EXAMPLE_ITEM.get().getDefaultInstance()).displayItems((parameters, output) -> {
-        output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
-    }).build());
+    public static final RegistryObject<CreativeModeTab> ENTITY_TAB = CREATIVE_MODE_TABS.register("entites_tab", ()
+            -> CreativeModeTab.builder()
+            .withTabsBefore(CreativeModeTabs.COMBAT) //note after default tabs
+            .icon(() ->
+            {
+                if (true) //check if any addon is present
+                {
+                    //get first egg
+                }
+                return new ItemStack(Items.EGG);
+            }
+            /*EXAMPLE_ITEM.get().getDefaultInstance()*/) //note retrieve Item from registry and then get ItemStack
+            .displayItems((parameters, output) -> {
+                output.accept(EXAMPLE_ITEM.get()); //note add Example item to that tab
+            })
+            .title(Component.translatable("tab.animania_entities.label")) //note p_237116 is translation code
+            .build());
+
+    public static final RegistryObject<CreativeModeTab> RESOURCES_TAB = CREATIVE_MODE_TABS.register("resources_tab", ()
+            -> CreativeModeTab.builder()
+            .withTabsBefore(ENTITY_TAB.getKey())
+            .icon(() -> new ItemStack(Items.DIAMOND)/*EXAMPLE_ITEM.get().getDefaultInstance()*/)
+            .displayItems((parameters, output) -> {
+                output.accept(EXAMPLE_ITEM.get());
+            })
+            .title(Component.translatable("tab.animania_resources.label"))
+            .build());
 
     public AnimaniaRefresh() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -78,6 +102,11 @@ public class AnimaniaRefresh {
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    public void StartupSetup()
+    {
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
