@@ -48,7 +48,7 @@ public class AnimaniaRefresh {
     // Creates a new BlockItem with the id "animania_refresh:example_block", combining the namespace and path
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
     // Creates a new food item with the id "animania_refresh:example_id", nutrition 1 and saturation 2
-    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () ->
+    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("bucket_slop", () ->
             new Item(new Item.Properties().food(new FoodProperties.Builder().alwaysEat().nutrition(1).saturationMod(2f).build())));
     //endregion
 
