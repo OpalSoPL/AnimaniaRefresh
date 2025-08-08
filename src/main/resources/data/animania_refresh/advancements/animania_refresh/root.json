@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "animania_refresh:bucket_slop"
+        },
+        "title": {
+            "translate": "advancements.animania.root.title",
+            "fallback": "fallback"
+        },
+        "description": {
+            "translate": "advancements.animania.root.desc",
+            "fallback": "fall"
+        },
+        "background": "minecraft:textures/block/mud.png"
+    },
+    "criteria": {
+        "test": {
+            "trigger": "minecraft:tick"
+        }
+    },
+    "requirements": []
+}
