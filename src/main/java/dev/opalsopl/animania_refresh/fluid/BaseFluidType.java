@@ -25,11 +25,11 @@ public class BaseFluidType extends FluidType {
     public BaseFluidType(ResourceLocation StillTexture, ResourceLocation FlowingTexture, ResourceLocation OverlayTexture,
                          int TintColor, Vector3f FogColor, Properties properties)
     {
-        this(StillTexture, FlowingTexture, OverlayTexture, TintColor, FogColor, properties, 1f, 10f);
+        this(StillTexture, FlowingTexture, OverlayTexture, TintColor, FogColor, 1f, 10f, properties);
     }
 
     public BaseFluidType(ResourceLocation StillTexture, ResourceLocation FlowingTexture, ResourceLocation OverlayTexture,
-                         int TintColor, Vector3f FogColor, Properties properties, float FogStartDist, float FogEndDist)
+                         int TintColor, Vector3f FogColor, float FogStartDist, float FogEndDist, Properties properties)
     {
         super(properties);
         stillTexture = StillTexture;
