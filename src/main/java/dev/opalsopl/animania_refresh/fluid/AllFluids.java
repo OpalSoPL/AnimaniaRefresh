@@ -26,6 +26,7 @@ public class AllFluids {
             = new ForgeFlowingFluid.Properties(AllFluidTypes.SLOP_FLUID_TYPE, SLOP_SOURCE_FLUID, SLOP_FLOWING_FLUID)
             .slopeFindDistance(2)
             .levelDecreasePerBlock(2)
+            .tickRate(30)
             .block(AllBlocks.SLOP_BLOCK)
             .bucket(AllItems.SLOP_BUCKET);
 
