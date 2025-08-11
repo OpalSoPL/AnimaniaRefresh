@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AnimaniaRefresh.MODID);
 
-    public static final RegistryObject<LiquidBlock> SLOP_BLOCK = BLOCKS.register("slop_block",
+    public static final RegistryObject<LiquidBlock> SLOP_BLOCK = BLOCKS.register("slop",
             () -> new LiquidBlock(AllFluids.SLOP_SOURCE_FLUID, BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     public static void register(IEventBus eventBus)

@@ -15,10 +15,10 @@ public class AllFluids {
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, AnimaniaRefresh.MODID);
 
     //register fluids
-    public static final RegistryObject<FlowingFluid> SLOP_SOURCE_FLUID = FLUIDS.register("slop_fluid",
+    public static final RegistryObject<FlowingFluid> SLOP_SOURCE_FLUID = FLUIDS.register("slop",
             () -> new ForgeFlowingFluid.Source(AllFluids.SLOP_FLUID_PROPERTIES));
 
-    public static final RegistryObject<FlowingFluid> SLOP_FLOWING_FLUID = FLUIDS.register("flowing_slop_fluid",
+    public static final RegistryObject<FlowingFluid> SLOP_FLOWING_FLUID = FLUIDS.register("flowing_slop",
             () -> new ForgeFlowingFluid.Flowing(AllFluids.SLOP_FLUID_PROPERTIES));
 
     //fluid properties

@@ -20,8 +20,8 @@ public class AllFluidTypes {
 
     //register fluids
     public static RegistryObject<FluidType> SLOP_FLUID_TYPE = FLUID_TYPES.register("slop", () ->
-        new BaseFluidType(SLOP_STILL_RL, SLOP_FLOWING_RL, SLOP_OVERLAY_RL, 0xFFFFFFFF, new Vector3f(0, 0, 0),
-                FluidType.Properties.create().canSwim(false).lightLevel(15))
+        new BaseFluidType(SLOP_STILL_RL, SLOP_FLOWING_RL, SLOP_OVERLAY_RL, 0xFFFFFFFF, new Vector3f(125/255f, 76/255f, 16/255f), 0, 1,
+                FluidType.Properties.create().viscosity(5))
     );
 
     public static void register(IEventBus eventBus)

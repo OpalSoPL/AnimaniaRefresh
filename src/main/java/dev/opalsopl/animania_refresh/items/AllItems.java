@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class AllItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AnimaniaRefresh.MODID);
 
-    public static final RegistryObject<Item> SLOP_BUCKET = ITEMS.register("bucket_slop", () ->
+    public static final RegistryObject<Item> SLOP_BUCKET = ITEMS.register("slop_bucket", () ->
             new BucketItem(AllFluids.SLOP_SOURCE_FLUID,
                     new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 

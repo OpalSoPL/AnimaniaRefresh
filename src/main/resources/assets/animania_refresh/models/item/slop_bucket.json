@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "animania_refresh:item/bucket_slop"
+        "layer0": "animania_refresh:item/slop_bucket"
     },
     "display": {
         "ground": {
