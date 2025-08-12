@@ -6,24 +6,34 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.NotImplementedException;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
+import java.nio.ByteBuffer;
 
 public class ParticleHelper {
     public static class ParticleModifier
     {
-        private final Vector3d position;
-        private final Vector3d velocity;
+        private final Vector3f position;
+        private final Vector3f velocity;
         private Vector3f color;
         private float power = -1;
         private float scale = -1;
         private int lifetime = -1;
 
-        public ParticleModifier(double x, double y, double z, double xd, double yd, double zd)
+        public ParticleModifier(float x, float y, float z, float xd, float yd, float zd)
         {
-            position = new Vector3d(x, y, z);
-            velocity = new Vector3d(xd, yd, zd);
+            position = new Vector3f(x, y, z);
+            velocity = new Vector3f(xd, yd, zd);
+        }
+
+        public ParticleModifier(ByteBuffer buffer)
+        {
+            Vector3f pos = new Vector3f();
+            Vector3f vel = new Vector3f();
+
+            decode(buffer, pos, vel);
+
+            position = pos;
+            velocity = vel;
         }
 
         public ParticleModifier setColor (float r, float g, float b)
@@ -72,7 +82,7 @@ public class ParticleHelper {
              return lifetime;
         }
 
-        public Vector3d getPos ()
+        public Vector3f getPos ()
         {
             return position;
         }
@@ -92,7 +102,7 @@ public class ParticleHelper {
             return position.z;
         }
 
-        public Vector3d getVel ()
+        public Vector3f getVel ()
         {
             return velocity;
         }
@@ -132,6 +142,53 @@ public class ParticleHelper {
 
             return particle;
         }
+
+        public ByteBuffer encode ()
+        {
+            ByteBuffer buffer = ByteBuffer.allocate((Float.BYTES * 11) + Integer.BYTES);
+
+            buffer.putFloat(position.x);
+            buffer.putFloat(position.y);
+            buffer.putFloat(position.z);
+
+            buffer.putFloat(velocity.x);
+            buffer.putFloat(velocity.y);
+            buffer.putFloat(velocity.z);
+
+            buffer.putFloat(color.x);
+            buffer.putFloat(color.y);
+            buffer.putFloat(color.z);
+
+            buffer.putFloat(power);
+            buffer.putFloat(scale);
+            buffer.putInt(lifetime);
+
+            return buffer;
+        }
+
+        private void decode (ByteBuffer buffer, Vector3f pos, Vector3f vel)
+        {
+            float x = buffer.getFloat();
+            float y = buffer.getFloat();
+            float z = buffer.getFloat();
+
+            float xd = buffer.getFloat();
+            float yd = buffer.getFloat();
+            float zd = buffer.getFloat();
+
+            float r = buffer.getFloat();
+            float g = buffer.getFloat();
+            float b = buffer.getFloat();
+
+            power = buffer.getFloat();
+            scale = buffer.getFloat();
+            lifetime = buffer.getInt();
+
+
+            pos.set(x, y, z);
+            vel.set(xd, yd, zd);
+            pos.set(r, g, b);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -147,6 +204,6 @@ public class ParticleHelper {
 
     public  static void sendParticle (ParticleOptions Options, ParticleModifier modifier)
     {
-        throw new NotImplementedException();
+
     }
 }
