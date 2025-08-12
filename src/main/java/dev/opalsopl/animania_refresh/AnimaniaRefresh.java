@@ -6,6 +6,8 @@ import dev.opalsopl.animania_refresh.fluid.AllFluidTypes;
 import dev.opalsopl.animania_refresh.fluid.AllFluids;
 import dev.opalsopl.animania_refresh.items.AllItems;
 
+import dev.opalsopl.animania_refresh.network.NetworkHandler;
+import dev.opalsopl.animania_refresh.network.ParticlePacket;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -78,6 +80,9 @@ public class AnimaniaRefresh {
 
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        //network packets
+        ParticlePacket.register(NetworkHandler.NETWORK);
 
         //note new deferred registers
         AllItems.register(modEventBus);

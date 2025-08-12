@@ -1,5 +1,7 @@
 package dev.opalsopl.animania_refresh.helper;
 
+import dev.opalsopl.animania_refresh.network.NetworkHandler;
+import dev.opalsopl.animania_refresh.network.ParticlePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -204,9 +206,9 @@ public class ParticleHelper {
         engine.add(p);
     }
 
-    public  static void sendParticle (ParticleOptions Options, ParticleModifier modifier)
+    public  static void sendParticle (ParticleOptions options, ParticleModifier modifier)
     {
-
+        NetworkHandler.NETWORK.sendToServer(new ParticlePacket(modifier, options));
     }
 
     public static boolean inRenderRange (Vec3 pos, ParticleModifier modifier)
