@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
@@ -205,5 +207,18 @@ public class ParticleHelper {
     public  static void sendParticle (ParticleOptions Options, ParticleModifier modifier)
     {
 
+    }
+
+    public static boolean inRenderRange (Vec3 pos, ParticleModifier modifier)
+    {
+        double maxX = modifier.getX() + 18;
+        double minX = modifier.getX() - 18;
+        double maxY = modifier.getY() + 18;
+        double minY = modifier.getY() - 18;
+        double maxZ = modifier.getZ() + 18;
+        double minZ = modifier.getZ() - 18;
+        AABB boundingBox = new AABB(maxX, maxY, maxZ, minX, minY, minZ);
+
+        return boundingBox.contains(pos);
     }
 }
