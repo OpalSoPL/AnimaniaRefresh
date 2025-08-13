@@ -10,8 +10,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Vector3f;
+import org.joml.*;
+
 import java.nio.ByteBuffer;
+import java.util.Random;
 
 public class ParticleHelper {
     public static class ParticleModifier
@@ -23,13 +25,46 @@ public class ParticleHelper {
         private float scale = -1;
         private int lifetime = -1;
 
-        public ParticleModifier(float x, float y, float z, float xd, float yd, float zd)
+        public ParticleModifier (float x, float y, float z, float xd, float yd, float zd)
         {
             position = new Vector3f(x, y, z);
             velocity = new Vector3f(xd, yd, zd);
         }
 
-        public ParticleModifier(ByteBuffer buffer)
+        public ParticleModifier (ParticleModifier modifier, float x, float y, float z)
+        {
+            position = new Vector3f(x, y, z);
+            velocity = modifier.getVel();
+
+            color = modifier.getColor();
+            power = modifier.power;
+            scale = modifier.scale;
+            lifetime = modifier.lifetime;
+        }
+
+        public ParticleModifier (ParticleModifier modifier, float x, float y, float z, float xd, float yd, float zd)
+        {
+            position = new Vector3f(x, y, z);
+            velocity = new Vector3f(xd, yd, zd);
+
+            color = modifier.getColor();
+            power = modifier.power;
+            scale = modifier.scale;
+            lifetime = modifier.lifetime;
+        }
+
+        public ParticleModifier (ParticleModifier modifier)
+        {
+            position = modifier.getPos();
+            velocity = modifier.getVel();
+
+            color = modifier.getColor();
+            power = modifier.power;
+            scale = modifier.scale;
+            lifetime = modifier.lifetime;
+        }
+
+        public ParticleModifier (ByteBuffer buffer)
         {
             Vector3f pos = new Vector3f();
             Vector3f vel = new Vector3f();
@@ -70,7 +105,7 @@ public class ParticleHelper {
 
         public Vector3f getColor ()
         {
-            return color;
+            return new Vector3f(color);
         }
 
         public float getPower () {
@@ -88,7 +123,7 @@ public class ParticleHelper {
 
         public Vector3f getPos ()
         {
-            return position;
+            return new Vector3f(position);
         }
 
         public double getX ()
@@ -108,7 +143,7 @@ public class ParticleHelper {
 
         public Vector3f getVel ()
         {
-            return velocity;
+            return new Vector3f(velocity);
         }
 
         public double getXd ()
@@ -195,15 +230,45 @@ public class ParticleHelper {
         }
     }
 
+    public static void spawnParticle (ParticleOptions options, ParticleModifier modifier, Vector3f spreadRange, int amount)
+    {
+        Random rand = new Random();
+
+        float modX = (float) modifier.getX();
+        float modY = (float) modifier.getY();
+        float modZ = (float) modifier.getZ();
+
+        float maxX = modX + spreadRange.x;
+        float minX = modX - spreadRange.x;
+        float maxY = modY + spreadRange.y;
+        float minY = modY - spreadRange.y;
+        float maxZ = modZ + spreadRange.z;
+        float minZ = modZ - spreadRange.z;
+
+        for (int i = 1; i <= amount; i++)
+        {
+            float x = rand.nextFloat(minX, maxX);
+            float y = rand.nextFloat(minY, maxY);
+            float z = rand.nextFloat(minZ, maxZ);
+
+            spawnParticle(options, new ParticleModifier(modifier, x, y, z));
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
-    public static void spawnParticle (ParticleOptions Options, ParticleModifier modifier)
+    public static void spawnParticle (ParticleOptions options, ParticleModifier modifier)
     {
         ParticleEngine engine = Minecraft.getInstance().particleEngine;
-        Particle p = engine.createParticle(Options, modifier.getX(), modifier.getY(), modifier.getZ(),
+        Particle p = engine.createParticle(options, modifier.getX(), modifier.getY(), modifier.getZ(),
                 modifier.getXd(), modifier.getYd(), modifier.getZd());
 
         p = modifier.modifyParticle(p);
         engine.add(p);
+    }
+
+    public  static void sendParticle (ParticleOptions options, ParticleModifier modifier, Vector3f spreadRange, int amount)
+    {
+        NetworkHandler.NETWORK.sendToServer(new ParticlePacket(modifier, options, amount, spreadRange));
     }
 
     public  static void sendParticle (ParticleOptions options, ParticleModifier modifier)
