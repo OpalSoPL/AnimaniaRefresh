@@ -1,5 +1,8 @@
 package dev.opalsopl.animania_refresh.fluid;
 
+import dev.opalsopl.animania_refresh.helper.ParticleHelper;
+
+import dev.opalsopl.animania_refresh.sounds.AllSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -9,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
+import org.joml.Vector3f;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -30,7 +34,7 @@ public class ExtendedFluidTest extends LiquidBlock {
             {
                 level.playLocalSound( //https://docs.minecraftforge.net/en/1.20.x/gameeffects/sounds/#level //3rd method
                         pos,
-                        SoundEvents.HONEY_BLOCK_SLIDE, //todo replace with separate SoundEvent
+                        AllSounds.SLOP_FLOW.get(),
                         SoundSource.BLOCKS,
                         0.5F, //volume
                         0.8F + random.nextFloat() * 0.4F, //pitch
@@ -41,10 +45,9 @@ public class ExtendedFluidTest extends LiquidBlock {
 
         if (random.nextInt(15) == 0)
         {
-            if (level.isClientSide())
-            {// last float = size
-                level.addParticle(ParticleTypes.EFFECT, pos.getX(), pos.getY(), pos.getZ(), 0d, 0d, 0d);
-            }
+            ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(pos.getX(), pos.getY(), pos.getZ(), 0f, 5f, 0f)
+                    .setColor(1, 0, 0)
+                    , new Vector3f(1, 1, 1), 10);
         }
     }
 }

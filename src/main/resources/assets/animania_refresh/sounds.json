@@ -1,4 +1,59 @@
 {
-"combo": {"animania": "master","sounds": [{"name": "animania:combo","stream": false}]},
-"zap": {"animania": "master","sounds": [{"name": "animania:zap","stream": false}]}
+  "combo": {
+    "subtitle": "animania_refresh:subtitle",
+    "sounds": [
+      {
+        "name": "animania_refresh:combo"
+      }
+    ]
+  },
+  "zap": {
+    "subtitle": "animania_refresh:subtitle.zap",
+    "sounds": [
+      {
+        "name": "animania_refresh:zap"
+      }
+    ]
+  },
+  "slop_flow": {
+    "subtitle": "animania_refresh:subtitle.slop_flow",
+    "sounds": [
+      {
+        "name": "block/honeyblock/slide1",
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide1",
+        "pitch": 0.9,
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide2",
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide2",
+        "pitch": 0.8,
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide3",
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide3",
+        "pitch": 0.8,
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide4",
+        "volume": 0.8
+      },
+      {
+        "name": "block/honeyblock/slide4",
+        "pitch": 0.8,
+        "volume": 0.8
+      }
+    ]
+  }
 }

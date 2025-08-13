@@ -8,6 +8,7 @@ import dev.opalsopl.animania_refresh.items.AllItems;
 
 import dev.opalsopl.animania_refresh.network.NetworkHandler;
 import dev.opalsopl.animania_refresh.network.ParticlePacket;
+import dev.opalsopl.animania_refresh.sounds.AllSounds;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -89,6 +90,7 @@ public class AnimaniaRefresh {
         AllBlocks.register(modEventBus);
         AllFluidTypes.register(modEventBus);
         AllFluids.register(modEventBus);
+        AllSounds.register(modEventBus);
 
 
         // Register ourselves for server and other game events we are interested in
