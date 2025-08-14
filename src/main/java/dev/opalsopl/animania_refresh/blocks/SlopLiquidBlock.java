@@ -1,4 +1,4 @@
-package dev.opalsopl.animania_refresh.fluid;
+package dev.opalsopl.animania_refresh.blocks;
 
 import dev.opalsopl.animania_refresh.helper.ParticleHelper;
 
@@ -17,11 +17,11 @@ import org.joml.Vector3f;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class ExtendedFluidTest extends LiquidBlock {
+public class SlopLiquidBlock extends LiquidBlock {
 
     private final Random random;
 
-    public ExtendedFluidTest(Supplier<? extends FlowingFluid> sup, Properties properties) {
+    public SlopLiquidBlock(Supplier<? extends FlowingFluid> sup, Properties properties) {
         super(sup, properties);
         random = new Random();
     }
@@ -45,9 +45,12 @@ public class ExtendedFluidTest extends LiquidBlock {
 
         if (level.getBlockState(pos.above()).is(Blocks.AIR) && random.nextInt(15) == 0)
         {
-            ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(pos.getX(), pos.getY(), pos.getZ(), 0f, 5f, 0f)
-                    .setColor(1, 0, 0)
-                    , new Vector3f(1, 1, 1), 10);
+            ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0f, 5f, 0f)
+                    .setColor(125/255f, 76/255f, 16/255f)
+                    , new Vector3f(0.5f, 0.3f, 0.5f), 3);
         }
     }
+
+//    @Override
+//    public void entityInside(BlockState state, Level level, BlockPos pos, Entity cause) {}
 }
