@@ -5,12 +5,11 @@ import dev.opalsopl.animania_refresh.helper.ParticleHelper;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 
 public class ParticlePacket{
@@ -49,6 +48,28 @@ public class ParticlePacket{
         }
     }
 
+    public ParticleHelper.ParticleModifier getModifier()
+    {
+        return modifier;
+    }
+
+    public ParticleOptions getParticleOptions() {
+        return particleOptions;
+    }
+
+    public Vector3f getSpreadRange() {
+        return spreadRange;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public boolean isExtended()
+    {
+        return extendedFlag;
+    }
+
     public void Encode (FriendlyByteBuf buf)
     {
         buf.writeBoolean(extendedFlag);
@@ -65,33 +86,20 @@ public class ParticlePacket{
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static void handle(ParticlePacket msg, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-
-        if (context.getDirection().getReceptionSide().isServer()) {
-            context.enqueueWork(() -> {
-                MinecraftServer server = context.getSender().getServer();
-
-                assert server != null;
-
-                server.getPlayerList().getPlayers().stream()
-                        .filter((player) -> ParticleHelper.inRenderRange(player.position(), msg.modifier))
-                        .forEach((player) -> NetworkHandler.NETWORK.send(PacketDistributor.PLAYER.with(() -> player), msg));
-            });
-        }
-        else {
-            context.enqueueWork(() -> {
-                if (!msg.extendedFlag)
-                {
-                    ParticleHelper.spawnParticle(msg.particleOptions, msg.modifier);
-                }
-                else
-                {
-                    ParticleHelper.spawnParticle(msg.particleOptions, msg.modifier, msg.spreadRange, msg.amount);
-                }
-                context.setPacketHandled(true);
-            });
-        }
+        context.enqueueWork(() -> {
+            if (!msg.extendedFlag)
+            {
+                ParticleHelper.spawnParticle(msg.particleOptions, msg.modifier);
+            }
+            else
+            {
+                ParticleHelper.spawnParticle(msg.particleOptions, msg.modifier, msg.spreadRange, msg.amount);
+            }
+            context.setPacketHandled(true);
+        });
     }
 
     public static void register(SimpleChannel channel) {

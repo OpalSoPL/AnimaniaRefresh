@@ -6,10 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.joml.*;
 
 import java.nio.ByteBuffer;
@@ -266,14 +269,26 @@ public class ParticleHelper {
         engine.add(p);
     }
 
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public  static void sendParticle (ParticleOptions options, ParticleModifier modifier, Vector3f spreadRange, int amount)
     {
-        NetworkHandler.NETWORK.sendToServer(new ParticlePacket(modifier, options, amount, spreadRange));
+        sendParticle(new ParticlePacket(modifier, options, amount, spreadRange));
     }
 
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public  static void sendParticle (ParticleOptions options, ParticleModifier modifier)
     {
-        NetworkHandler.NETWORK.sendToServer(new ParticlePacket(modifier, options));
+        sendParticle(new ParticlePacket(modifier, options));
+    }
+
+    @OnlyIn(Dist.DEDICATED_SERVER)
+    private static void sendParticle (ParticlePacket packet)
+    {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+
+        server.getPlayerList().getPlayers().stream()
+                .filter((player) -> ParticleHelper.inRenderRange(player.position(), packet.getModifier()))
+                .forEach((player) -> NetworkHandler.NETWORK.send(PacketDistributor.PLAYER.with(() -> player), packet));
     }
 
     public static boolean inRenderRange (Vec3 pos, ParticleModifier modifier)
