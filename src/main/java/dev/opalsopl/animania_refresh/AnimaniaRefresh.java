@@ -10,6 +10,7 @@ import dev.opalsopl.animania_refresh.network.NetworkHandler;
 import dev.opalsopl.animania_refresh.network.ParticlePacket;
 import dev.opalsopl.animania_refresh.recipes.AllRecipeTypes;
 import dev.opalsopl.animania_refresh.sounds.AllSounds;
+import dev.opalsopl.animania_refresh.tabs.AllTabs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -41,47 +42,12 @@ public class AnimaniaRefresh {
     public static final String MODID = "animania_refresh";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "animania_refresh" namespace
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
-
-    // Creates a creative tab with the id "animania_refresh:example_tab" for the example item, that is placed after the combat tab
-    public static final RegistryObject<CreativeModeTab> ENTITY_TAB = CREATIVE_MODE_TABS.register("entites_tab", ()
-            -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT) //note after default tabs
-            .icon(() ->
-            {
-//                if (true) //check if any addon is present
-//                {
-//                    //get first egg
-//                }
-                return new ItemStack(Items.EGG);
-            }
-            /*SLOP_BUCKET.get().getDefaultInstance()*/) //note retrieve Item from registry and then get ItemStack
-            .displayItems((parameters, output) -> {
-                output.accept(SLOP_BUCKET.get()); //note add Example item to that tab
-            })
-            .title(Component.translatable("tab.animania_entities.label")) //note p_237116 is translation code
-            .build());
-
-    public static final RegistryObject<CreativeModeTab> RESOURCES_TAB = CREATIVE_MODE_TABS.register("resources_tab", ()
-            -> CreativeModeTab.builder()
-            .withTabsBefore(ENTITY_TAB.getKey())
-            .icon(() -> new ItemStack(Items.DIAMOND)/*SLOP_BUCKET.get().getDefaultInstance()*/)
-            .displayItems((parameters, output) -> {
-                output.accept(SLOP_BUCKET.get());
-            })
-            .title(Component.translatable("tab.animania_resources.label"))
-            .build());
 
     public AnimaniaRefresh() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-
-        // Register the Deferred Register to the mod event bus so tabs get registered
-        CREATIVE_MODE_TABS.register(modEventBus);
 
         //network packets
         ParticlePacket.register(NetworkHandler.NETWORK);
@@ -93,13 +59,11 @@ public class AnimaniaRefresh {
         AllFluids.register(modEventBus);
         AllSounds.register(modEventBus);
         AllRecipeTypes.register(modEventBus);
+        AllTabs.register(modEventBus);
 
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -115,11 +79,6 @@ public class AnimaniaRefresh {
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
-    }
-
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        //if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(EXAMPLE_BLOCK_ITEM);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
