@@ -1,53 +1,18 @@
 {
-   "type": "animania:no_bucket_recipe",
-   "ingredients": [
-	  {
-         "type": "animania:pigfood"
-      },
-	  {
-         "type": "animania:pigfood"
-      },
-	  [
-		{
-			"type" : "animania:addon_item",
-			"addon" : "farm",
-			"item": [
-				{
-					"type": "animania:filled_bucket",
-					"fluid": "milk_holstein"
-				},
-				{
-					"type": "animania:filled_bucket",
-					"fluid": "milk_friesian"
-				},
-				{
-					"type": "animania:filled_bucket",
-					"fluid": "milk_sheep"
-				},
-				{
-					"type": "animania:filled_bucket",
-					"fluid": "milk_goat"
-				},
-				{
-					"type": "animania:filled_bucket",
-					"fluid": "milk_jersey"
-				}
-			],
-			"fallback": { 
-				"item" : "minecraft:milk_bucket"
-			}
-		},
+	"type": "animania_refresh:no_bucket",
+	"ingredients": [
 		{
 			"item": "minecraft:milk_bucket"
+		},
+		{
+			"tag": "animania_refresh:pig_food"
+		},
+		{
+			"tag": "animania_refresh:pig_food"
 		}
-	  ]
-   ],
-   "result": 
-   {
-      "item": "forge:bucketfilled",
-		"nbt": {
-			"FluidName": "slop",
-			"Amount" : 1000
-		}
-   }
+	],
+	"result": {
+		"count": 1,
+		"item": "animania_refresh:slop_bucket"
+	}
 }
