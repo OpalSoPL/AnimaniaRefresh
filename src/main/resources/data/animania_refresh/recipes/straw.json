@@ -1,11 +1,11 @@
 {
+  "type": "minecraft:crafting_shapeless",
   "result": {
-    "item": "animania:block_straw"
+    "item": "animania_refresh:straw"
   },
   "ingredients": [
     {
       "item": "minecraft:wheat"
     }
-  ],
-  "type": "minecraft:crafting_shapeless"
+  ]
 }

@@ -35,6 +35,7 @@ public class AllTabs {
         if (event.getTab() == RESOURCES_TAB.get())
         {
             event.accept(AllItems.SLOP_BUCKET);
+            event.accept(AllItems.STRAW);
         }
         else if (event.getTab() == ENTITY_TAB.get())
         {

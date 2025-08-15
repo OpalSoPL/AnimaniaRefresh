@@ -1,6 +1,6 @@
 {
     "variants": {
-        "variant=straw": 
+        "":
 		[
 				  { "model": "animania_refresh:block/straw" },
 		          { "model": "animania_refresh:block/straw", "y": 90 },
