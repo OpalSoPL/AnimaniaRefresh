@@ -23,6 +23,9 @@ public class AllItems {
     public static final RegistryObject<BlockItem> STRAW = ITEMS.register("straw", () ->
             new BlockItem(AllBlocks.STRAW_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<BlockItem> TROUGH = ITEMS.register("trough", () ->
+            new BlockItem(AllBlocks.TROUGH_BLOCK.get(), new Item.Properties()));
+
 
     public static void register(IEventBus eventBus)
     {

@@ -2,6 +2,7 @@ package dev.opalsopl.animania_refresh;
 
 import com.mojang.logging.LogUtils;
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
+import dev.opalsopl.animania_refresh.blocks.entities.client.TroughBlockRenderer;
 import dev.opalsopl.animania_refresh.fluid.AllFluidTypes;
 import dev.opalsopl.animania_refresh.fluid.AllFluids;
 import dev.opalsopl.animania_refresh.items.AllItems;
@@ -11,6 +12,7 @@ import dev.opalsopl.animania_refresh.network.ParticlePacket;
 import dev.opalsopl.animania_refresh.recipes.AllRecipeTypes;
 import dev.opalsopl.animania_refresh.sounds.AllSounds;
 import dev.opalsopl.animania_refresh.tabs.AllTabs;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -31,6 +33,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
+import software.bernie.geckolib.GeckoLib;
 
 import static dev.opalsopl.animania_refresh.items.AllItems.SLOP_BUCKET;
 
@@ -60,6 +63,8 @@ public class AnimaniaRefresh {
         AllSounds.register(modEventBus);
         AllRecipeTypes.register(modEventBus);
         AllTabs.register(modEventBus);
+
+        GeckoLib.initialize();
 
 
         // Register ourselves for server and other game events we are interested in
@@ -95,6 +100,7 @@ public class AnimaniaRefresh {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            BlockEntityRenderers.register(AllBlocks.TROUGH_BE.get(), TroughBlockRenderer::new);
         }
     }
 }

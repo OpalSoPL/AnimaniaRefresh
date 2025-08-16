@@ -36,6 +36,7 @@ public class AllTabs {
         {
             event.accept(AllItems.SLOP_BUCKET);
             event.accept(AllItems.STRAW);
+            event.accept(AllItems.TROUGH);
         }
         else if (event.getTab() == ENTITY_TAB.get())
         {
