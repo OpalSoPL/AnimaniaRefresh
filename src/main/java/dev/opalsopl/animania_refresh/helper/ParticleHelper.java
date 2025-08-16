@@ -207,7 +207,7 @@ public class ParticleHelper {
 
             pos.set(x, y, z);
             vel.set(xd, yd, zd);
-            pos.set(r, g, b);
+            color = new Vector3f(r, g, b);
         }
     }
 
