@@ -28,38 +28,16 @@ public class ParticleHelper {
         private float scale = -1;
         private int lifetime = -1;
 
-        public ParticleModifier (float x, float y, float z, float xd, float yd, float zd)
+        public ParticleModifier (Vector3f pos, Vector3f vel)
         {
-            position = new Vector3f(x, y, z);
-            velocity = new Vector3f(xd, yd, zd);
+            position = new Vector3f(pos);
+            velocity = new Vector3f(vel);
         }
 
-        public ParticleModifier (ParticleModifier modifier, float x, float y, float z)
+        public ParticleModifier (ParticleModifier modifier, Vector3f pos, Vector3f vel)
         {
-            position = new Vector3f(x, y, z);
-            velocity = modifier.getVel();
-
-            color = modifier.getColor();
-            power = modifier.power;
-            scale = modifier.scale;
-            lifetime = modifier.lifetime;
-        }
-
-        public ParticleModifier (ParticleModifier modifier, float x, float y, float z, float xd, float yd, float zd)
-        {
-            position = new Vector3f(x, y, z);
-            velocity = new Vector3f(xd, yd, zd);
-
-            color = modifier.getColor();
-            power = modifier.power;
-            scale = modifier.scale;
-            lifetime = modifier.lifetime;
-        }
-
-        public ParticleModifier (ParticleModifier modifier)
-        {
-            position = modifier.getPos();
-            velocity = modifier.getVel();
+            position = new Vector3f(pos != null ? pos : modifier.getPos());
+            velocity = new Vector3f(vel != null ? vel : modifier.getVel());
 
             color = modifier.getColor();
             power = modifier.power;
@@ -254,7 +232,7 @@ public class ParticleHelper {
             float y = rand.nextFloat(minY, maxY);
             float z = rand.nextFloat(minZ, maxZ);
 
-            spawnParticle(options, new ParticleModifier(modifier, x, y, z));
+            spawnParticle(options, new ParticleModifier(modifier, new Vector3f(x,y,z), null));
         }
     }
 

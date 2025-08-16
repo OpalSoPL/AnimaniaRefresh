@@ -45,7 +45,9 @@ public class SlopLiquidBlock extends LiquidBlock {
 
         if (level.getBlockState(pos.above()).is(Blocks.AIR) && random.nextInt(15) == 0)
         {
-            ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, 0f, 5f, 0f)
+            ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(
+                            new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f),
+                            new Vector3f(0, 0, 0))
                     .setColor(125/255f, 76/255f, 16/255f)
                     , new Vector3f(0.5f, 0.3f, 0.5f), 3);
         }
