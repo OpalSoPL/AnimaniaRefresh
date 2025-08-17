@@ -21,9 +21,11 @@ import java.util.Random;
 public class ParticleHelper {
     public static class ParticleModifier
     {
+        private final Vector3f NOTHING = new Vector3f(-1, -1, -1);
+
         private final Vector3f position;
         private final Vector3f velocity;
-        private Vector3f color;
+        private Vector3f color = NOTHING;
         private float power = -1;
         private float scale = -1;
         private int lifetime = -1;
@@ -144,7 +146,7 @@ public class ParticleHelper {
 
         public Particle modifyParticle(Particle particle)
         {
-            if (color != null) {
+            if (color != NOTHING) {
                 particle.setColor(color.x, color.y, color.z);
             }
 
