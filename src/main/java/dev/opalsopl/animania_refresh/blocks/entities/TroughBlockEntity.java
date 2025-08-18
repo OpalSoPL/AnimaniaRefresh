@@ -1,14 +1,20 @@
 package dev.opalsopl.animania_refresh.blocks.entities;
 
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
+import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import dev.opalsopl.animania_refresh.types.EContainerType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +26,9 @@ import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
+    private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.GetModResource("trough_food"));
+    private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.GetModResource("trough_fluids"));
+
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private EContainerType type = EContainerType.none;
 
@@ -31,6 +40,11 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
             if (level != null) {
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
             }
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return stack.getFluid().defaultFluidState().holder().is(TROUGH_FLUIDS);
         }
     };
 
@@ -47,6 +61,11 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
         @Override
         public int getSlotLimit(int slot) {
             return 3;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return stack.is(TROUGH_FOODS);
         }
     };
 
