@@ -1,7 +1,7 @@
 package dev.opalsopl.animania_refresh.recipes;
 
 import com.google.gson.JsonObject;
-import dev.opalsopl.animania_refresh.AnimaniaRefresh;
+import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,7 +35,7 @@ public class NoBucketRecipe extends ShapelessRecipe {
     public static class Serializer implements RecipeSerializer<NoBucketRecipe>
     {
         public static final Serializer INSTANCE = new Serializer();
-        public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AnimaniaRefresh.MODID, "no_bucket");
+        public static final ResourceLocation ID = ResourceHelper.GetModResource("no_bucket");
 
 
         @Override

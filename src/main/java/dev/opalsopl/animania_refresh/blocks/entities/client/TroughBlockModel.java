@@ -12,17 +12,17 @@ import java.util.Optional;
 public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
     @Override
     public ResourceLocation getModelResource(TroughBlockEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(AnimaniaRefresh.MODID, "geo/trough.geo.json");
+        return ResourceHelper.GetModResource("geo/trough.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TroughBlockEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(AnimaniaRefresh.MODID, "textures/block/entity/block_trough.png");
+        return ResourceHelper.GetModResource("textures/block/entity/block_trough.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(TroughBlockEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(AnimaniaRefresh.MODID, "animations/trough_fluid.animation.json");
+        return null;
     }
 
     @Override
