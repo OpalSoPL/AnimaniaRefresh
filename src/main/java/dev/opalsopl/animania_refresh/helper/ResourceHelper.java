@@ -18,4 +18,19 @@ public class ResourceHelper {
     {
         return ResourceLocation.parse(path);
     }
+
+    public static ResourceLocation AddPathPrefix(ResourceLocation location, String pathPrefix)
+    {
+        return GetModResource(location.getNamespace(), pathPrefix + "/" + location.getPath());
+    }
+
+    public static ResourceLocation AddPathSuffix(ResourceLocation location, String pathSuffix)
+    {
+        return GetModResource(location.getNamespace(), location.getPath() + pathSuffix);
+    }
+
+    public static ResourceLocation AddPathSufPref(ResourceLocation location, String pathPrefix, String pathSuffix)
+    {
+        return AddPathSuffix(AddPathPrefix(location, pathPrefix), pathSuffix);
+    }
 }
