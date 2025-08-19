@@ -152,6 +152,8 @@ public class TroughBlock extends BaseEntityBlock {
     {
         ItemStack item = new ItemStack(heldItem.getItemHolder(), 1);
 
+        if (item.isEmpty()) return InteractionResult.PASS;
+
         ItemStack remaining = trough.items.insertItem(0, item, false);
 
         if (remaining.isEmpty())
@@ -170,9 +172,15 @@ public class TroughBlock extends BaseEntityBlock {
     private InteractionResult retrieveFood(TroughBlockEntity trough, Player player)
     {
         ItemStack item = trough.items.extractItem(0, 1, false);
+        if (trough.items.getStackInSlot(0).isEmpty())
+        {
+            trough.setContainerType(EContainerType.none);
+        }
 
-        player.addItem(item);
-
-        return InteractionResult.PASS;
+        if (!player.isCreative())
+        {
+            player.addItem(item);
+        }
+        return InteractionResult.CONSUME;
     }
 }

@@ -76,11 +76,6 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
     public void setContainerType(EContainerType type)
     {
         this.type = type;
-        setChanged();
-
-        if (level != null) {
-            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-        }
     }
 
     public EContainerType getContainerType()
@@ -93,6 +88,14 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
         return tank.isEmpty() && items.getStackInSlot(0).isEmpty();
     }
 
+    public int getSize()
+    {
+        if (isEmpty()) return 0;
+
+        return type == EContainerType.fluid
+                ? tank.getFluidAmount() : items.getStackInSlot(0).getCount();
+    }
+
     //Animation
 
     @Override
@@ -101,7 +104,6 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> geoAnimatableAnimationState) {
-        geoAnimatableAnimationState.getController().setAnimation(RawAnimation.begin());
         return PlayState.CONTINUE;
     }
 
