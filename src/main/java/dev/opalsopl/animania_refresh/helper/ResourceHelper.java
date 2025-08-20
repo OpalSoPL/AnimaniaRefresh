@@ -33,4 +33,9 @@ public class ResourceHelper {
     {
         return AddPathSuffix(AddPathPrefix(location, pathPrefix), pathSuffix);
     }
+
+    public static ResourceLocation ChangeNamespace(ResourceLocation location, String targetNamespace)
+    {
+        return GetModResource(targetNamespace, location.getPath());
+    }
 }
