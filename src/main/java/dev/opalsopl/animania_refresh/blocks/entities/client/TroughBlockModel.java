@@ -35,10 +35,7 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
             fluidOptional.get().setHidden(animatable.isEmpty());
             foodOptional.get().setHidden(animatable.items.getStackInSlot(0).isEmpty());
 
-            if (!animatable.isEmpty())
-            {
-                convertStateToAnimation(animatable, fluidOptional.get());
-            }
+            convertStateToAnimation(animatable, fluidOptional.get());
         }
     }
 
@@ -53,6 +50,7 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
             case 2, 400, 500 -> fluidBone.setPosY(-3);
             case 600, 700 -> fluidBone.setPosY(-2);
             case 3, 800, 900 -> fluidBone.setPosY(-1);
+            default -> fluidBone.setPosY(0);
         }
     }
 }
