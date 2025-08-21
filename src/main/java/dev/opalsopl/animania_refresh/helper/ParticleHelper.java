@@ -60,17 +60,21 @@ public class ParticleHelper {
 
         public ParticleModifier setColor (int r, int g, int b)
         {
-            if (((0 > r && -1 != r) || r > 255)
-                    || ((0 > g && -1 != g) || g > 255)
-                    || ((0 > b && -1 != b) || b > 255))
+            if (((0 > r && -1 != r) || r > 255) ||
+                ((0 > g && -1 != g) || g > 255) ||
+                ((0 > b && -1 != b) || b > 255))
                 throw new IllegalArgumentException("RGB value must be -1 or between 0 and 255");
 
-            if ((r == -1 || g == -1 || b == -1)
-                    && (!(r == -1 && g == -1 && b == -1)))
-                throw new IllegalArgumentException("all values must be -1 to not change color");
+            if (r == -1 || g == -1 || b == -1)
+            {
+                if(!(r == -1 && g == -1 && b == -1))
+                    throw new IllegalArgumentException("all values must be -1 to not change color");
+
+                color = new Vector3f(NOTHING);
+                return this;
+            }
 
             color = new Vector3f(r/255f, g/255f, b/255f);
-
             return this;
         }
 
