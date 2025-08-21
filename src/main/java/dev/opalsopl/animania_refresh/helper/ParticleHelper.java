@@ -68,7 +68,7 @@ public class ParticleHelper {
             if (r == -1 || g == -1 || b == -1)
             {
                 if(!(r == -1 && g == -1 && b == -1))
-                    throw new IllegalArgumentException("all values must be -1 to not change color");
+                    throw new IllegalArgumentException("All values must be -1 to not change color");
 
                 color = new Vector3f(NOTHING);
                 return this;
@@ -207,7 +207,7 @@ public class ParticleHelper {
             buffer.putFloat(scale);
             buffer.putInt(lifetime);
 
-            return buffer;
+            return buffer.flip();
         }
 
         private void decode (ByteBuffer buffer, Vector3f pos, Vector3f vel)
