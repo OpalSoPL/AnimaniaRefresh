@@ -60,6 +60,9 @@ public class ParticleHelper {
 
         public ParticleModifier setColor (float r, float g, float b)
         {
+            if ((0 > r && -1 != r) || (0 > g && -1 != g) || (0 > b && -1 != b))
+                throw new IllegalArgumentException("RGB value must be -1 or >= 0");
+
             color = new Vector3f(r, g, b);
 
             return this;
@@ -67,6 +70,9 @@ public class ParticleHelper {
 
         public ParticleModifier setPower (float power)
         {
+            if (0 > power && -1 != power)
+                throw new IllegalArgumentException("Power must be -1 or >= 0");
+
             this.power = power;
 
             return this;
@@ -74,6 +80,9 @@ public class ParticleHelper {
 
         public ParticleModifier setScale (float scale)
         {
+            if (0 > scale && -1 != scale)
+                throw new IllegalArgumentException("Scale must be -1 or >= 0");
+
             this.scale = scale;
 
             return this;
@@ -81,6 +90,9 @@ public class ParticleHelper {
 
         public ParticleModifier setLifetime (int lifetime)
         {
+            if (0 > lifetime && -1 != lifetime)
+                throw new IllegalArgumentException("Lifetime must be -1 or >= 0");
+
             this.lifetime = lifetime;
 
             return this;
