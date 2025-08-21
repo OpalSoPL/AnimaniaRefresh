@@ -36,7 +36,7 @@ public class ParticlePacket{
     public  ParticlePacket(FriendlyByteBuf buf)
     {
         extendedFlag = buf.readBoolean();
-        modifier = new ParticleHelper.ParticleModifier(buf.readBytes((Float.BYTES * 11) + Integer.BYTES).nioBuffer());
+        modifier = new ParticleHelper.ParticleModifier(buf.readBytes((Float.BYTES * 8) + (Integer.BYTES * 4)).nioBuffer());
         particleOptions = buf.readJsonWithCodec(ParticleTypes.CODEC);
 
         if (extendedFlag)
