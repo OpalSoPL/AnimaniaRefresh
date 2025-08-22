@@ -48,7 +48,7 @@ public class SlopLiquidBlock extends LiquidBlock {
             ParticleHelper.spawnParticle(ParticleTypes.EFFECT, new ParticleHelper.ParticleModifier(
                             new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f),
                             new Vector3f(0, 0, 0))
-                    .setColor(125/255f, 76/255f, 16/255f)
+                    .setColor(125, 76, 16)
                     , new Vector3f(0.5f, 0.3f, 0.5f), 3);
         }
     }

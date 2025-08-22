@@ -11,12 +11,12 @@ public class ResourceHelper {
 
     public static ResourceLocation GetModResource(String namespace, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        return ResourceLocation.fromNamespaceAndPath(namespace.toLowerCase(), path.toLowerCase());
     }
 
     public static ResourceLocation GetVanillaResource(String path)
     {
-        return ResourceLocation.parse(path);
+        return ResourceLocation.parse(path.toLowerCase());
     }
 
     public static ResourceLocation AddPathPrefix(ResourceLocation location, String pathPrefix)

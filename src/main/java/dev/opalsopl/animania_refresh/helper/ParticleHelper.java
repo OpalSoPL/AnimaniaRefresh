@@ -21,11 +21,11 @@ import java.util.Random;
 public class ParticleHelper {
     public static class ParticleModifier
     {
-        private final Vector3f NOTHING = new Vector3f(-1, -1, -1);
+        private final Vector3i NOTHING = new Vector3i(-1, -1, -1);
 
         private final Vector3f position;
         private final Vector3f velocity;
-        private Vector3f color = NOTHING;
+        private Vector3i color = NOTHING;
         private float power = -1;
         private float scale = -1;
         private int lifetime = -1;
@@ -58,15 +58,31 @@ public class ParticleHelper {
             velocity = vel;
         }
 
-        public ParticleModifier setColor (float r, float g, float b)
+        public ParticleModifier setColor (int r, int g, int b)
         {
-            color = new Vector3f(r, g, b);
+            if (((0 > r && -1 != r) || r > 255) ||
+                ((0 > g && -1 != g) || g > 255) ||
+                ((0 > b && -1 != b) || b > 255))
+                throw new IllegalArgumentException("RGB value must be -1 or between 0 and 255");
 
+            if (r == -1 || g == -1 || b == -1)
+            {
+                if(!(r == -1 && g == -1 && b == -1))
+                    throw new IllegalArgumentException("All values must be -1 to not change color");
+
+                color = new Vector3i(NOTHING);
+                return this;
+            }
+
+            color = new Vector3i(r, g, b);
             return this;
         }
 
         public ParticleModifier setPower (float power)
         {
+            if (0 > power && -1 != power)
+                throw new IllegalArgumentException("Power must be -1 or >= 0");
+
             this.power = power;
 
             return this;
@@ -74,6 +90,9 @@ public class ParticleHelper {
 
         public ParticleModifier setScale (float scale)
         {
+            if (0 > scale && -1 != scale)
+                throw new IllegalArgumentException("Scale must be -1 or >= 0");
+
             this.scale = scale;
 
             return this;
@@ -81,14 +100,22 @@ public class ParticleHelper {
 
         public ParticleModifier setLifetime (int lifetime)
         {
+            if (0 > lifetime && -1 != lifetime)
+                throw new IllegalArgumentException("Lifetime must be -1 or >= 0");
+
             this.lifetime = lifetime;
 
             return this;
         }
 
-        public Vector3f getColor ()
+        public Vector3i getColor ()
         {
-            return new Vector3f(color);
+            return new Vector3i(color);
+        }
+
+        public Vector3f getColorRange()
+        {
+            return new Vector3f(color.x/255f, color.y/255f, color.z/255f);
         }
 
         public float getPower () {
@@ -147,7 +174,8 @@ public class ParticleHelper {
         public Particle modifyParticle(Particle particle)
         {
             if (color != NOTHING) {
-                particle.setColor(color.x, color.y, color.z);
+                Vector3f val = getColorRange();
+                particle.setColor(val.x, val.y, val.z);
             }
 
             if (power != -1) {
@@ -167,7 +195,7 @@ public class ParticleHelper {
 
         public ByteBuffer encode ()
         {
-            ByteBuffer buffer = ByteBuffer.allocate((Float.BYTES * 11) + Integer.BYTES);
+            ByteBuffer buffer = ByteBuffer.allocate((Float.BYTES * 10) + (Integer.BYTES * 4));
 
             buffer.putFloat(position.x);
             buffer.putFloat(position.y);
@@ -177,15 +205,15 @@ public class ParticleHelper {
             buffer.putFloat(velocity.y);
             buffer.putFloat(velocity.z);
 
-            buffer.putFloat(color.x);
-            buffer.putFloat(color.y);
-            buffer.putFloat(color.z);
+            buffer.putInt(color.x);
+            buffer.putInt(color.y);
+            buffer.putInt(color.z);
 
             buffer.putFloat(power);
             buffer.putFloat(scale);
             buffer.putInt(lifetime);
 
-            return buffer;
+            return buffer.flip();
         }
 
         private void decode (ByteBuffer buffer, Vector3f pos, Vector3f vel)
@@ -198,9 +226,9 @@ public class ParticleHelper {
             float yd = buffer.getFloat();
             float zd = buffer.getFloat();
 
-            float r = buffer.getFloat();
-            float g = buffer.getFloat();
-            float b = buffer.getFloat();
+            int r = buffer.getInt();
+            int g = buffer.getInt();
+            int b = buffer.getInt();
 
             power = buffer.getFloat();
             scale = buffer.getFloat();
@@ -209,7 +237,7 @@ public class ParticleHelper {
 
             pos.set(x, y, z);
             vel.set(xd, yd, zd);
-            color = new Vector3f(r, g, b);
+            color = new Vector3i(r, g, b);
         }
     }
 
