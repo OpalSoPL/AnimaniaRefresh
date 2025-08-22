@@ -1,5 +1,6 @@
-package dev.opalsopl.animania_refresh.helper;
+package dev.opalsopl.animania_refresh.test.helper;
 
+import dev.opalsopl.animania_refresh.helper.ParticleHelper;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.junit.jupiter.api.Assertions;
