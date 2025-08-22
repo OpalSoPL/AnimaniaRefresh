@@ -11,7 +11,7 @@ public class ResourceHelper {
 
     public static ResourceLocation GetModResource(String namespace, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        return ResourceLocation.fromNamespaceAndPath(namespace.toLowerCase(), path.toLowerCase());
     }
 
     public static ResourceLocation GetVanillaResource(String path)
