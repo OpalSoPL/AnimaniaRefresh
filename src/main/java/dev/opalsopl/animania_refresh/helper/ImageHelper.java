@@ -44,10 +44,8 @@ public class ImageHelper {
             int bSum = 0;
             int count = 0;
 
-            for (int y = minY; y < maxY; y++)
-            {
-                for (int x = minX; x < maxX; x++)
-                {
+            for (int y = minY; y < maxY; y++) {
+                for (int x = minX; x < maxX; x++) {
                     int color = img.getPixelRGBA(x, y);
 
                     int a = (color >> 24) & 0xFF;
@@ -62,9 +60,9 @@ public class ImageHelper {
                 }
             }
 
-            int r = (int) Math.round(Math.pow((double) rSum / count, 2) * 255);
-            int g = (int) Math.round(Math.pow((double) gSum / count, 2) * 255);
-            int b = (int) Math.round(Math.pow((double) bSum / count, 2) * 255);
+            int r = (int) Math.pow((double) rSum / count, 2);
+            int g = (int) Math.pow((double) gSum / count, 2);
+            int b = (int) Math.pow((double) bSum / count, 2);
 
             return (r << 16) | (g << 8) | b;
         }
