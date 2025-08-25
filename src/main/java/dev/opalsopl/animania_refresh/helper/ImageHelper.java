@@ -17,7 +17,13 @@ public class ImageHelper {
     {
         Minecraft mc = Minecraft.getInstance();
 
-        Resource res  = mc.getResourceManager().getResource(location).orElseThrow();
+        Resource res;
+
+        try {
+            res = mc.getResourceManager().getResource(location).orElseThrow();
+        } catch (Exception e) { //catch exception to stop game from crashing
+            return 0xF800F8;
+        }
 
         try (InputStream stream = res.open()) {
 
