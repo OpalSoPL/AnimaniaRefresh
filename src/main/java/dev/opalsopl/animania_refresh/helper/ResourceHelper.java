@@ -1,7 +1,9 @@
 package dev.opalsopl.animania_refresh.helper;
 
 import dev.opalsopl.animania_refresh.AnimaniaRefresh;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 
 public class ResourceHelper {
     public static ResourceLocation GetModResource(String path)
@@ -37,5 +39,12 @@ public class ResourceHelper {
     public static ResourceLocation ChangeNamespace(ResourceLocation location, String targetNamespace)
     {
         return GetModResource(targetNamespace, location.getPath());
+    }
+
+    public static Resource getResource(ResourceLocation location)
+    {
+        Minecraft mc = Minecraft.getInstance();
+
+        return mc.getResourceManager().getResource(location).orElseThrow();
     }
 }
