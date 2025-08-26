@@ -3,7 +3,6 @@ package dev.opalsopl.animania_refresh.helper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,6 +17,19 @@ import java.io.InputStreamReader;
 public class ImageHelper {
     @OnlyIn(Dist.CLIENT)
     public static int getAverageColor(ResourceLocation location, Vector2i corner1, Vector2i corner2, boolean ignoreAlpha)
+    {
+        Resource res;
+        try {
+            res = ResourceHelper.getResource(location);
+
+            return getAverageColor(res, corner1, corner2, ignoreAlpha);
+        } catch (Exception e) { //catch exception to stop game from crashing
+            return 0xF800F8;
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static int getAverageColor(Resource resource, Vector2i corner1, Vector2i corner2, boolean ignoreAlpha)
     {
         try (InputStream stream = resource.open();
              NativeImage img = NativeImage.read(stream))
