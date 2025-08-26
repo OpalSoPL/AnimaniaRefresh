@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public class TroughBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 8.0D, 14.0D);
-    private static final TagKey<Item> ANIMAL_BUCKETS_TAG = ItemTags.create(ResourceHelper.GetModResource("buckets_with_animals"));
+    private static final TagKey<Item> ANIMAL_BUCKETS_TAG = ItemTags.create(ResourceHelper.getModResourceLocation("buckets_with_animals"));
 
     public TroughBlock(Properties properties) {
         super(properties);

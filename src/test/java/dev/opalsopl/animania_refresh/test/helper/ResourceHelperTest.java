@@ -18,7 +18,7 @@ public class ResourceHelperTest {
     public void getModResource_Path_Match(String path)
     {
         assertEquals(String.format("%s:%s", AnimaniaRefresh.MODID, path.toLowerCase()),
-                ResourceHelper.GetModResource(path).toString());
+                ResourceHelper.getModResourceLocation(path).toString());
     }
 
     @ParameterizedTest
@@ -32,7 +32,7 @@ public class ResourceHelperTest {
     public void getModResource_Full_Match(String namespace, String path)
     {
         assertEquals(String.format("%s:%s", namespace.toLowerCase(), path.toLowerCase()),
-                ResourceHelper.GetModResource(namespace, path).toString());
+                ResourceHelper.getModResourceLocation(namespace, path).toString());
     }
 
     @ParameterizedTest
@@ -40,7 +40,7 @@ public class ResourceHelperTest {
     public void getVanillaResource_Full_Match(String path)
     {
         assertEquals(String.format("%s:%s", "minecraft", path.toLowerCase()),
-                ResourceHelper.GetVanillaResource(path).toString());
+                ResourceHelper.getVanillaResourceLocation(path).toString());
     }
 
     @ParameterizedTest
@@ -48,7 +48,7 @@ public class ResourceHelperTest {
     public void getModResource_Path_ThrowsException(String path)
     {
         assertThrows(ResourceLocationException.class, () ->
-                ResourceHelper.GetModResource(path));
+                ResourceHelper.getModResourceLocation(path));
     }
 
     @ParameterizedTest
@@ -56,7 +56,7 @@ public class ResourceHelperTest {
     public void getVanillaResource_ThrowsException(String path)
     {
         assertThrows(ResourceLocationException.class, () ->
-                ResourceHelper.GetVanillaResource(path));
+                ResourceHelper.getVanillaResourceLocation(path));
     }
 
     @ParameterizedTest
@@ -65,7 +65,7 @@ public class ResourceHelperTest {
     public void getModResource_NamespacePath_ThrowsException(String namespace, String path)
     {
         assertThrows(ResourceLocationException.class, () ->
-                ResourceHelper.GetModResource(namespace, path));
+                ResourceHelper.getModResourceLocation(namespace, path));
     }
 
     @ParameterizedTest
@@ -74,7 +74,7 @@ public class ResourceHelperTest {
             "random-mod, random_png, v2"})
     public void addPathPrefix_Match(String namespace, String basePath, String prefix)
     {
-        ResourceLocation res = ResourceHelper.GetModResource(namespace, basePath);
+        ResourceLocation res = ResourceHelper.getModResourceLocation(namespace, basePath);
         ResourceLocation resultRes = ResourceHelper.AddPathPrefix(res, prefix);
 
         assertEquals(String.format("%s:%s/%s", namespace, prefix, basePath), resultRes.toString());
@@ -86,7 +86,7 @@ public class ResourceHelperTest {
             "random-mod, random_png, -baby"})
     public void addPathSuffix_Match(String namespace, String basePath, String suffix)
     {
-        ResourceLocation res = ResourceHelper.GetModResource(namespace, basePath);
+        ResourceLocation res = ResourceHelper.getModResourceLocation(namespace, basePath);
         ResourceLocation resultRes = ResourceHelper.AddPathSuffix(res, suffix);
 
         assertEquals(String.format("%s:%s%s", namespace, basePath, suffix), resultRes.toString());
@@ -98,7 +98,7 @@ public class ResourceHelperTest {
             "random-mod, random_png, new, .png"})
     public void addPathSufPref_Match(String namespace, String basePath, String prefix, String suffix)
     {
-        ResourceLocation res = ResourceHelper.GetModResource(namespace, basePath);
+        ResourceLocation res = ResourceHelper.getModResourceLocation(namespace, basePath);
         ResourceLocation resultRes = ResourceHelper.AddPathSufPref(res, prefix, suffix);
 
         assertEquals(String.format("%s:%s/%s%s", namespace, prefix, basePath, suffix), resultRes.toString());
@@ -110,7 +110,7 @@ public class ResourceHelperTest {
                 "random-mod, random_png, new"})
     public void changeNamespace(String namespace, String path, String targetNamespace)
     {
-        ResourceLocation res = ResourceHelper.GetModResource(namespace, path);
+        ResourceLocation res = ResourceHelper.getModResourceLocation(namespace, path);
         ResourceLocation resultRes = ResourceHelper.ChangeNamespace(res, targetNamespace);
 
         assertEquals(String.format("%s:%s", targetNamespace, path), resultRes.toString());

@@ -28,7 +28,7 @@ import java.util.Map;
 public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
     private final static Map<String, Integer> avarageColorCache = new HashMap<>();
 
-    private final ResourceLocation OTHER_MATERIAL = ResourceHelper.GetModResource("textures/block/entity/trough_elements/other_fluid.png"); //background for items
+    private final ResourceLocation OTHER_MATERIAL = ResourceHelper.getModResourceLocation("textures/block/entity/trough_elements/other_fluid.png"); //background for items
 
     public TroughBlockRenderer(BlockEntityRendererProvider.Context context) {
         super(new TroughBlockModel());

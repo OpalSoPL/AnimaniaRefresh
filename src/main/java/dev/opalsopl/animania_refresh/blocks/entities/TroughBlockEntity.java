@@ -26,8 +26,8 @@ import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
-    private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.GetModResource("trough_food"));
-    private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.GetModResource("trough_fluids"));
+    private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.getModResourceLocation("trough_food"));
+    private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.getModResourceLocation("trough_fluids"));
 
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private EContainerType type = EContainerType.none;

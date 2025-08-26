@@ -15,9 +15,9 @@ public class AllFluidTypes {
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, AnimaniaRefresh.MODID);
 
     //assets and data for fluids
-    public static final ResourceLocation SLOP_STILL_RL = ResourceHelper.GetModResource("block/slop_still");
-    public static final ResourceLocation SLOP_FLOWING_RL = ResourceHelper.GetModResource("block/slop_flow");
-    public static final ResourceLocation SLOP_OVERLAY_RL = ResourceHelper.GetVanillaResource("block/water_overlay");
+    public static final ResourceLocation SLOP_STILL_RL = ResourceHelper.getModResourceLocation("block/slop_still");
+    public static final ResourceLocation SLOP_FLOWING_RL = ResourceHelper.getModResourceLocation("block/slop_flow");
+    public static final ResourceLocation SLOP_OVERLAY_RL = ResourceHelper.getVanillaResourceLocation("block/water_overlay");
 
     //register fluids
     public static RegistryObject<FluidType> SLOP_FLUID_TYPE = FLUID_TYPES.register("slop", () ->
