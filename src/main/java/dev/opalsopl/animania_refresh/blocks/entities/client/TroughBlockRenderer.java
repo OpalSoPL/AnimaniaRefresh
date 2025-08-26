@@ -1,5 +1,6 @@
 package dev.opalsopl.animania_refresh.blocks.entities.client;
 
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.opalsopl.animania_refresh.AnimaniaRefresh;
@@ -59,6 +60,28 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
                     "textures/block/entity/trough_elements", "_food.png");
         }
         return null;
+    }
+
+    private int getTintColor(ResourceLocation location)
+    {
+        try
+        {
+            JsonObject json = ImageHelper.getTextureMetadata(ResourceHelper.AddPathSuffix(location, ".mcmeta"));
+
+            if (json != null && json.has("animania_refresh_texture_overrides"))
+            {
+                JsonObject overrides = json.get("animania_refresh_texture_overrides").getAsJsonObject();
+
+                String data = overrides.get("tint_color").getAsString();
+
+                return Integer.decode(data);
+            }
+
+            return ImageHelper.getAverageColor(location, new Vector2i(), new Vector2i(15, 15), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0xFFFFFF;
+        }
     }
 
 
@@ -131,7 +154,7 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
                 assert loc != null;
 
                 String key = loc.toString();
-                int avgColor =  avarageColorCache.computeIfAbsent(key, k -> ImageHelper.getAverageColor(loc, new Vector2i(), new Vector2i(15, 15), true));
+                int avgColor =  avarageColorCache.computeIfAbsent(key, k -> getTintColor(loc));
 
                 Vector3i color = ImageHelper.intToVectorColor(avgColor);
 
