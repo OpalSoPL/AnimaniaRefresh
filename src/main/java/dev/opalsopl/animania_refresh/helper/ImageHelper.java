@@ -1,5 +1,7 @@
 package dev.opalsopl.animania_refresh.helper;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -9,25 +11,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Vector2i;
 import org.joml.Vector3i;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ImageHelper {
     @OnlyIn(Dist.CLIENT)
     public static int getAverageColor(ResourceLocation location, Vector2i corner1, Vector2i corner2, boolean ignoreAlpha)
     {
-        Minecraft mc = Minecraft.getInstance();
-
-        Resource res;
-
-        try {
-            res = mc.getResourceManager().getResource(location).orElseThrow();
-        } catch (Exception e) { //catch exception to stop game from crashing
-            return 0xF800F8;
-        }
-
-        try (InputStream stream = res.open()) {
-
-            NativeImage img = NativeImage.read(stream);
+        try (InputStream stream = resource.open();
+             NativeImage img = NativeImage.read(stream))
+        {
 
             int minX = Math.min(corner1.x, corner2.x);
             int maxX = Math.max(corner1.x, corner2.x);
@@ -80,5 +74,27 @@ public class ImageHelper {
         int b = color & 0xFF;
 
         return new Vector3i(r, g, b);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static JsonObject getTextureMetadata (ResourceLocation location)
+    {
+        Resource res;
+
+        try {
+            res = ResourceHelper.getResource(location);
+
+            return getTextureMetadata(res);
+        } catch (Exception e) { //catch exception to stop game from crashing
+            return null;
+        }
+
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static JsonObject getTextureMetadata (Resource resource) throws IOException {
+        try (InputStream stream = resource.open()){
+            return  JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+        }
     }
 }
