@@ -58,9 +58,9 @@ public class ImageHelper {
 
                     if (ignoreAlpha && a == 0) continue;
 
-                    rSum += (int) Math.sqrt((color >> 16) & 0xFF);
+                    rSum += (int) Math.sqrt(color & 0xFF);
                     gSum += (int) Math.sqrt((color >> 8) & 0xFF);
-                    bSum += (int) Math.sqrt(color & 0xFF);
+                    bSum += (int) Math.sqrt((color >> 16) & 0xFF);
 
                     count++;
                 }
