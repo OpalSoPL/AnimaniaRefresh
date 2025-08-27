@@ -126,6 +126,7 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
     public void invalidateCaps() {
         super.invalidateCaps();
         itemHandlerLazyOptional.invalidate();
+        fluidHandlerLazyOptional.invalidate();
     }
 
     //Animation
