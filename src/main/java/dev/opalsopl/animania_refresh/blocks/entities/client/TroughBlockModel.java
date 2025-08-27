@@ -40,14 +40,19 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
     {
         int size = animatable.getSize();
 
-        switch (size)
+        if (!animatable.items.getStackInSlot(0).isEmpty())
         {
-            case 1, 100 -> contentBone.setPosY(-4.9f); //used -4.9f instead of -5 to fix Z-fighing
-            case 200, 300 -> contentBone.setPosY(-4);
-            case 2, 400, 500 -> contentBone.setPosY(-3);
-            case 600, 700 -> contentBone.setPosY(-2);
-            case 3, 800, 900 -> contentBone.setPosY(-1);
-            default -> contentBone.setPosY(0);
+            switch (size)
+            {
+                case 1 -> contentBone.setPosY(-4.9f); //used -4.9f instead of -5 to fix Z-fighing
+                case 2 -> contentBone.setPosY(-3);
+                case 3 -> contentBone.setPosY(-1);
+                default -> contentBone.setPosY(0);
+            }
+            return;
         }
+        float fluidPercentage = size/1000f;
+
+        contentBone.setPosY((fluidPercentage*5)-5);
     }
 }
