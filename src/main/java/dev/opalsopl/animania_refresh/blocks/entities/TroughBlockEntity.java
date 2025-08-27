@@ -4,6 +4,7 @@ import dev.opalsopl.animania_refresh.blocks.AllBlocks;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import dev.opalsopl.animania_refresh.types.EContainerType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.tags.FluidTags;
@@ -14,8 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -29,8 +35,12 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
     private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.getModResourceLocation("trough_food"));
     private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.getModResourceLocation("trough_fluids"));
 
+    private final LazyOptional<IItemHandler> itemHandlerLazyOptional;
+    private final LazyOptional<IFluidHandler> fluidHandlerLazyOptional;
+
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
     private EContainerType type = EContainerType.none;
+
 
     public FluidTank tank = new FluidTank(1000)//1 Bucket
     {
@@ -71,6 +81,9 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     public TroughBlockEntity(BlockPos pos, BlockState state) {
         super(AllBlocks.TROUGH_BE.get(), pos, state);
+
+        itemHandlerLazyOptional = LazyOptional.of(() -> items);
+        fluidHandlerLazyOptional = LazyOptional.of(() -> tank);
     }
 
     public void setContainerType(EContainerType type)
@@ -94,6 +107,25 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
         return type == EContainerType.fluid
                 ? tank.getFluidAmount() : items.getStackInSlot(0).getCount();
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+        {
+            return itemHandlerLazyOptional.cast();
+        }
+        else if (cap == ForgeCapabilities.FLUID_HANDLER)
+        {
+            return fluidHandlerLazyOptional.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        itemHandlerLazyOptional.invalidate();
     }
 
     //Animation
