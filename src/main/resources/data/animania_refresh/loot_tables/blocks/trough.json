@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
+      "bonus_rolls": 0,
       "conditions": [
         {
           "condition": "minecraft:survives_explosion"
@@ -11,11 +11,12 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [],
           "name": "animania_refresh:trough"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
-  "random_sequence": "minecraft:blocks/trough"
+  "random_sequence": "minecraft:blocks/animania_refresh/trough"
 }

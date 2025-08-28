@@ -25,7 +25,7 @@ public class AllBlocks {
                     .sound(SoundType.CHERRY_LEAVES)));
 
     public static final RegistryObject<Block> TROUGH_BLOCK = BLOCKS.register("trough",
-            () -> new TroughBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new TroughBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .noOcclusion()));
 
     //BE
