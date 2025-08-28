@@ -31,7 +31,7 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
         Optional<GeoBone> foodOptional = getBone("food");
         Optional<GeoBone> contentOptional = getBone("content");
 
-        foodOptional.ifPresent(bone -> bone.setHidden(animatable.items.getStackInSlot(0).isEmpty()));
+        foodOptional.ifPresent(bone -> bone.setHidden(animatable.getItemHandler().getStackInSlot(0).isEmpty()));
         fluidOptional.ifPresent(bone -> bone.setHidden(animatable.isEmpty()));
         contentOptional.ifPresent(bone -> convertStateToAnimation(animatable, bone));
     }
@@ -40,7 +40,7 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
     {
         int size = animatable.getSize();
 
-        if (!animatable.items.getStackInSlot(0).isEmpty())
+        if (!animatable.getItemHandler().getStackInSlot(0).isEmpty())
         {
             switch (size)
             {

@@ -2,7 +2,8 @@ package dev.opalsopl.animania_refresh.blocks;
 
 import dev.opalsopl.animania_refresh.blocks.entities.TroughBlockEntity;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
-import dev.opalsopl.animania_refresh.types.EContainerType;
+import dev.opalsopl.animania_refresh.types.EContentType;
+import dev.opalsopl.animania_refresh.types.ITroughEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.ItemTags;
@@ -98,15 +99,15 @@ public class TroughBlock extends BaseEntityBlock {
 
         if (level.isClientSide) return InteractionResult.SUCCESS;
 
-        if (!(blockEntity instanceof TroughBlockEntity trough)) return InteractionResult.PASS;
+        if (!(blockEntity instanceof ITroughEntity trough)) return InteractionResult.PASS;
 
         if (!trough.isEmpty())
         {
-           if (trough.getContainerType() == EContainerType.fluid && held.is(Items.BUCKET))
+           if (trough.getContentType() == EContentType.FLUID && held.is(Items.BUCKET))
            {
                 return retrieveFluid(held, trough, player, interactionHand);
            }
-           else if (trough.getContainerType() == EContainerType.item && held.isEmpty())
+           else if (trough.getContentType() == EContentType.ITEM && held.isEmpty())
            {
                return retrieveFood(trough, player);
            }
@@ -114,7 +115,7 @@ public class TroughBlock extends BaseEntityBlock {
 
         if (held.getItem() instanceof BucketItem)
         {
-            if (!trough.isEmpty() && trough.getContainerType() != EContainerType.fluid) return InteractionResult.PASS;
+            if (!trough.isEmpty() && trough.getContentType() != EContentType.FLUID) return InteractionResult.PASS;
 
             return addFluid(held, trough, player, interactionHand);
         }
@@ -124,7 +125,7 @@ public class TroughBlock extends BaseEntityBlock {
         }
     }
 
-    private InteractionResult addFluid(ItemStack heldItem, TroughBlockEntity trough, Player player, InteractionHand hand)
+    private InteractionResult addFluid(ItemStack heldItem, ITroughEntity trough, Player player, InteractionHand hand)
     {
         if (heldItem.is(ANIMAL_BUCKETS_TAG)) return InteractionResult.PASS;
 
@@ -132,25 +133,26 @@ public class TroughBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
 
         FluidStack fluid = new FluidStack(bucket.getFluid(), 1000);
+        FluidTank fluidTank = trough.getFluidTank();
 
-        if (!trough.tank.getFluid().isFluidEqual(fluid) && !trough.tank.isEmpty())
+        if (!fluidTank.getFluid().isFluidEqual(fluid) && !fluidTank.isEmpty())
             return InteractionResult.PASS;
 
-        trough.tank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+        fluidTank.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
 
         if (!player.isCreative())
         {
             player.setItemInHand(hand, new ItemStack(Items.BUCKET));
         }
-        trough.setContainerType(EContainerType.fluid);
         return InteractionResult.CONSUME;
     }
 
-    private InteractionResult retrieveFluid(ItemStack heldItem, TroughBlockEntity trough, Player player, InteractionHand hand)
+    private InteractionResult retrieveFluid(ItemStack heldItem, ITroughEntity trough, Player player, InteractionHand hand)
     {
-        if (trough.tank.isEmpty() || trough.tank.getFluidAmount() < 1000) return InteractionResult.PASS;
+        FluidTank fluidTank = trough.getFluidTank();
+        if (fluidTank.isEmpty() || fluidTank.getFluidAmount() < 1000) return InteractionResult.PASS;
 
-        FluidStack drained = trough.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+        FluidStack drained = fluidTank.drain(1000, IFluidHandler.FluidAction.EXECUTE);
 
         if (!player.isCreative())
         {
@@ -164,17 +166,17 @@ public class TroughBlock extends BaseEntityBlock {
                 player.setItemInHand(hand, new ItemStack(drained.getFluid().getBucket()));
             }
         }
-        trough.setContainerType(EContainerType.none);
         return InteractionResult.CONSUME;
     }
 
-    private InteractionResult addFood(ItemStack heldItem, TroughBlockEntity trough, Player player)
+    private InteractionResult addFood(ItemStack heldItem, ITroughEntity trough, Player player)
     {
         ItemStack item = new ItemStack(heldItem.getItemHolder(), 1);
+        IItemHandler itemHandler = trough.getItemHandler();
 
         if (item.isEmpty()) return InteractionResult.PASS;
 
-        ItemStack remaining = trough.items.insertItem(0, item, false);
+        ItemStack remaining = itemHandler.insertItem(0, item, false);
 
         if (remaining.isEmpty())
         {
@@ -182,21 +184,15 @@ public class TroughBlock extends BaseEntityBlock {
             {
                 heldItem.shrink(1);
             }
-            trough.setContainerType(EContainerType.item);
             return InteractionResult.CONSUME;
         }
 
         return InteractionResult.PASS;
     }
 
-    private InteractionResult retrieveFood(TroughBlockEntity trough, Player player)
+    private InteractionResult retrieveFood(ITroughEntity trough, Player player)
     {
-        ItemStack item = trough.items.extractItem(0, 1, false);
-        if (trough.items.getStackInSlot(0).isEmpty())
-        {
-            trough.setContainerType(EContainerType.none);
-        }
-
+        ItemStack item = trough.getItemHandler().extractItem(0, 1, false);
         if (!player.isCreative())
         {
             player.addItem(item);

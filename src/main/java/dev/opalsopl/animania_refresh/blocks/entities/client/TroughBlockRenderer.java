@@ -39,8 +39,8 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
     }
 
     private ResourceLocation getFluidTexture(TroughBlockEntity animatable) {
-        if (!animatable.tank.isEmpty()) {
-            ResourceLocation res = ForgeRegistries.FLUIDS.getKey(animatable.tank.getFluid().getFluid());
+        if (!animatable.getFluidTank().isEmpty()) {
+            ResourceLocation res = ForgeRegistries.FLUIDS.getKey(animatable.getFluidTank().getFluid().getFluid());
 
             return ResourceHelper.AddPathSufPref(ResourceHelper.ChangeNamespace(res, AnimaniaRefresh.MODID),
                     "textures/block/entity/trough_elements", "_fluid.png");
@@ -51,7 +51,7 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
     }
 
     private ResourceLocation getFoodTexture(TroughBlockEntity animatable) {
-        ItemStack item = animatable.items.getStackInSlot(0);
+        ItemStack item = animatable.getItemHandler().getStackInSlot(0);
 
         if (!item.isEmpty()) {
             ResourceLocation res = ForgeRegistries.ITEMS.getKey(item.getItem());
@@ -134,7 +134,7 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
 
         if (bone.getName().equals("fluid"))
         {
-            if (animatable.tank.getFluid().getFluid().equals(Fluids.WATER) &&
+            if (animatable.getFluidTank().getFluid().getFluid().equals(Fluids.WATER) &&
                 animatable.getLevel() != null)
             {
 
@@ -147,7 +147,8 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
                 super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, r/255f, g/255f, b/255f, alpha);
                 return;
             }
-            else if (!animatable.items.getStackInSlot(0).isEmpty() && animatable.tank.isEmpty())
+            else if (!animatable.getItemHandler().getStackInSlot(0).isEmpty() &&
+                    animatable.getFluidTank().isEmpty())
             {
                 ResourceLocation loc = getFoodTexture(animatable);
 
