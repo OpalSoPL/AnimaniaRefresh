@@ -109,6 +109,10 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
                 ? tank.getFluidAmount() : items.getStackInSlot(0).getCount();
     }
 
+    public ItemStack getContent() {
+        return items.getStackInSlot(0);
+    }
+
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER)

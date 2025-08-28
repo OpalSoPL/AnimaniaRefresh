@@ -75,6 +75,20 @@ public class TroughBlock extends BaseEntityBlock {
         };
     }
 
+    @Override
+    public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+
+        BlockEntity entity = level.getBlockEntity(pos);
+
+        if(entity instanceof TroughBlockEntity trough)
+        {
+            ItemStack items = trough.getContent();
+
+            popResource(level, pos, items);
+        }
+
+        super.onRemove(oldState, level, pos, newState, isMoving);
+    }
 
     //Interaction Handling
     @Override
