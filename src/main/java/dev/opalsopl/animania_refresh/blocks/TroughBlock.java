@@ -1,8 +1,10 @@
 package dev.opalsopl.animania_refresh.blocks;
 
 import dev.opalsopl.animania_refresh.blocks.entities.TroughBlockEntity;
+import dev.opalsopl.animania_refresh.blocks.entities.TroughProxyBlockEntity;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import dev.opalsopl.animania_refresh.types.EContentType;
+import dev.opalsopl.animania_refresh.types.ETroughPart;
 import dev.opalsopl.animania_refresh.types.ITroughEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,24 +20,31 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class TroughBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<ETroughPart> PART = EnumProperty.create("part", ETroughPart.class);
+
     private static final TagKey<Item> ANIMAL_BUCKETS_TAG = ItemTags.create(ResourceHelper.getModResourceLocation("buckets_with_animals"));
 
     public TroughBlock(Properties properties) {
@@ -45,24 +54,50 @@ public class TroughBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+        builder.add(PART);
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING,
-                context.getHorizontalDirection().getClockWise().getClockWise());
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection())
+                .setValue(PART, ETroughPart.PARENT);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new TroughBlockEntity(pos, state);
+        if (state.getValue(PART) == ETroughPart.PARENT)
+        {
+            return new TroughBlockEntity(pos, state);
+        }
+        else
+        {
+            return new TroughProxyBlockEntity(pos, state);
+        }
+
     }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return switch (state.getValue(PART))
+        {
+            case PARENT -> RenderShape.ENTITYBLOCK_ANIMATED;
+            case CHILD -> RenderShape.INVISIBLE;
+        };
+    }
+
+    public static Direction getNeighbourDirection(BlockState state)
+    {
+        Direction facing = state.getValue(FACING);
+        ETroughPart part = state.getValue(PART);
+
+        return switch (part)
+        {
+            case PARENT -> facing.getClockWise();
+            case CHILD -> facing.getCounterClockWise();
+        };
     }
 
     @Override
@@ -78,17 +113,50 @@ public class TroughBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState oldState, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-
-        BlockEntity entity = level.getBlockEntity(pos);
-
-        if(entity instanceof TroughBlockEntity trough)
+        if (!level.isClientSide)
         {
-            ItemStack items = trough.getContent();
+            BlockEntity entity = level.getBlockEntity(pos);
 
-            popResource(level, pos, items);
+            if (entity instanceof TroughBlockEntity trough)
+            {
+                ItemStack items = trough.getContent();
+
+                popResource(level, pos, items);
+            }
+
+            Direction direction = getNeighbourDirection(oldState);
+            level.setBlockAndUpdate(pos.relative(direction), Blocks.AIR.defaultBlockState());
         }
 
         super.onRemove(oldState, level, pos, newState, isMoving);
+    }
+
+    @Override
+    public void onPlace(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if (!level.isClientSide) {
+            Direction facing = newState.getValue(FACING);
+            ETroughPart part = newState.getValue(PART);
+
+            if (part == ETroughPart.PARENT) {
+                level.setBlockAndUpdate(pos.relative(facing.getClockWise()),
+                        defaultBlockState()
+                                .setValue(FACING, facing)
+                                .setValue(PART, ETroughPart.CHILD));
+            }
+        }
+
+        super.onPlace(newState, level, pos, oldState, isMoving);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader reader, BlockPos pos) {
+        BlockPos childPos = pos.relative(getNeighbourDirection(state));
+
+        boolean isFloorSturdyChild = reader.getBlockState(childPos.below()).isFaceSturdy(reader, childPos.below(), Direction.UP);
+        boolean isFloorSturdyParent = reader.getBlockState(pos.below()).isFaceSturdy(reader, childPos.below(), Direction.UP);
+        boolean isBlockEmptyChild = reader.isEmptyBlock(childPos);
+
+        return super.canSurvive(state, reader, pos) && isBlockEmptyChild && isFloorSturdyChild && isFloorSturdyParent;
     }
 
     //Interaction Handling
