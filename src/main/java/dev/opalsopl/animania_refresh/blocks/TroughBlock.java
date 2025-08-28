@@ -4,6 +4,7 @@ import dev.opalsopl.animania_refresh.blocks.entities.TroughBlockEntity;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import dev.opalsopl.animania_refresh.types.EContainerType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -34,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class TroughBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 8.0D, 14.0D);
     private static final TagKey<Item> ANIMAL_BUCKETS_TAG = ItemTags.create(ResourceHelper.getModResourceLocation("buckets_with_animals"));
 
     public TroughBlock(Properties properties) {
@@ -65,8 +65,14 @@ public class TroughBlock extends BaseEntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
-        return SHAPE;
+    public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
+        Direction facing= state.getValue(FACING);
+        return switch (facing)
+        {
+            case DOWN, UP -> super.getShape(state, getter, pos, context);
+            case EAST, WEST -> Block.box(2.0D, 0.0D, 0.0D, 14.0D, 8.0D, 16.0D);
+            case NORTH, SOUTH -> Block.box(0.0D, 0.0D, 2.0D, 16.0D, 8.0D, 14.0D);
+        };
     }
 
 
