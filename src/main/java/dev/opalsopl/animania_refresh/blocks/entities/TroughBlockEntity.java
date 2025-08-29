@@ -2,8 +2,10 @@ package dev.opalsopl.animania_refresh.blocks.entities;
 
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
-import dev.opalsopl.animania_refresh.types.EContainerType;
+import dev.opalsopl.animania_refresh.types.EContentType;
+import dev.opalsopl.animania_refresh.types.ITroughEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.tags.FluidTags;
@@ -14,25 +16,32 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
-    private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.GetModResource("trough_food"));
-    private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.GetModResource("trough_fluids"));
+public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity, ITroughEntity {
+    private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.getModResourceLocation("trough_food"));
+    private static final TagKey<Fluid> TROUGH_FLUIDS = FluidTags.create(ResourceHelper.getModResourceLocation("trough_fluids"));
 
-    private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private EContainerType type = EContainerType.none;
+    private final LazyOptional<IItemHandler> itemHandlerLazyOptional;
+    private final LazyOptional<IFluidHandler> fluidHandlerLazyOptional;
 
-    public FluidTank tank = new FluidTank(1000)//1 Bucket
+    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    private final FluidTank tank = new FluidTank(1000)//1 Bucket
     {
         @Override
         protected void onContentsChanged() {
@@ -44,11 +53,12 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
         @Override
         public boolean isFluidValid(FluidStack stack) {
-            return stack.getFluid().defaultFluidState().holder().is(TROUGH_FLUIDS);
+            return stack.getFluid().defaultFluidState().holder().is(TROUGH_FLUIDS) &&
+                    items.getStackInSlot(0).isEmpty();
         }
     };
 
-    public ItemStackHandler items = new ItemStackHandler()
+    private final ItemStackHandler items = new ItemStackHandler()
     {
         @Override
         protected void onContentsChanged(int slot) {
@@ -65,24 +75,20 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.is(TROUGH_FOODS);
+            return stack.is(TROUGH_FOODS) && tank.isEmpty();
         }
     };
 
     public TroughBlockEntity(BlockPos pos, BlockState state) {
         super(AllBlocks.TROUGH_BE.get(), pos, state);
+
+        itemHandlerLazyOptional = LazyOptional.of(() -> items);
+        fluidHandlerLazyOptional = LazyOptional.of(() -> tank);
     }
 
-    public void setContainerType(EContainerType type)
-    {
-        this.type = type;
-    }
+    //Getters
 
-    public EContainerType getContainerType()
-    {
-        return type;
-    }
-
+    @Override
     public boolean isEmpty()
     {
         return tank.isEmpty() && items.getStackInSlot(0).isEmpty();
@@ -92,15 +98,61 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
     {
         if (isEmpty()) return 0;
 
-        return type == EContainerType.fluid
+        return !tank.isEmpty()
                 ? tank.getFluidAmount() : items.getStackInSlot(0).getCount();
+    }
+
+    public FluidTank getFluidTank() {
+        return tank;
+    }
+
+    public IItemHandler getItemHandler() {
+        return items;
+    }
+
+    public EContentType getContentType() {
+        if (isEmpty())
+        {
+            return EContentType.EMPTY;
+        }
+        if (!tank.isEmpty())
+        {
+            return EContentType.FLUID;
+        }
+        return EContentType.ITEM;
+    }
+
+    public ItemStack getContent() {
+        return items.getStackInSlot(0);
+    }
+
+    //Capabilities
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+        {
+            return itemHandlerLazyOptional.cast();
+        }
+        else if (cap == ForgeCapabilities.FLUID_HANDLER)
+        {
+            return fluidHandlerLazyOptional.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        itemHandlerLazyOptional.invalidate();
+        fluidHandlerLazyOptional.invalidate();
     }
 
     //Animation
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "fluid_controller", 0, this::predicate));
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> geoAnimatableAnimationState) {
@@ -125,7 +177,6 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
         data.put("tank", tank.writeToNBT(new CompoundTag()));
         data.put("items", items.serializeNBT());
-        data.putString("type", type.name());
     }
 
     @Override
@@ -134,14 +185,6 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity {
 
         tank.readFromNBT(data.getCompound("tank"));
         items.deserializeNBT(data.getCompound("items"));
-
-        try {
-            type = EContainerType.valueOf(data.getString("type"));
-        }
-        catch (IllegalArgumentException e)
-        {
-            type = EContainerType.none;
-        }
     }
 
     @Override

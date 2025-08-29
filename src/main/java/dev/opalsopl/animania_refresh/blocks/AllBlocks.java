@@ -2,6 +2,7 @@ package dev.opalsopl.animania_refresh.blocks;
 
 import dev.opalsopl.animania_refresh.AnimaniaRefresh;
 import dev.opalsopl.animania_refresh.blocks.entities.TroughBlockEntity;
+import dev.opalsopl.animania_refresh.blocks.entities.TroughProxyBlockEntity;
 import dev.opalsopl.animania_refresh.fluid.AllFluids;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,13 +26,16 @@ public class AllBlocks {
                     .sound(SoundType.CHERRY_LEAVES)));
 
     public static final RegistryObject<Block> TROUGH_BLOCK = BLOCKS.register("trough",
-            () -> new TroughBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new TroughBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .noOcclusion()));
 
     //BE
 
     public static final RegistryObject<BlockEntityType<TroughBlockEntity>> TROUGH_BE = BLOCK_ENTITIES.register("trough_be",
             () -> BlockEntityType.Builder.of(TroughBlockEntity::new, TROUGH_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<TroughProxyBlockEntity>> TROUGH_PROXY_BE = BLOCK_ENTITIES.register("trough_proxy_be",
+            () -> BlockEntityType.Builder.of(TroughProxyBlockEntity::new, TROUGH_BLOCK.get()).build(null));
 
     public static void register(IEventBus eventBus)
     {

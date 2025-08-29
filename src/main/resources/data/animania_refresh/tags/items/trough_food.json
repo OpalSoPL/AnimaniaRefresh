@@ -1,12 +1,18 @@
 {
   "values": [
     "minecraft:wheat_seeds",
+    "minecraft:wheat",
+    "minecraft:apple",
+    "minecraft:beetroot",
+    "minecraft:melon_seeds",
+    "minecraft:beef",
     "minecraft:pumpkin_seeds",
     "minecraft:beetroot_seeds",
     "minecraft:carrot",
     "minecraft:potato",
     "minecraft:poisonous_potato",
     "minecraft:cod",
-    "minecraft:salmon"
+    "minecraft:salmon",
+    "minecraft:egg"
   ]
 }

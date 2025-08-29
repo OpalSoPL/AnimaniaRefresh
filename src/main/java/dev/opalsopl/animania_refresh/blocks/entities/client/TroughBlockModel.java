@@ -12,12 +12,12 @@ import java.util.Optional;
 public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
     @Override
     public ResourceLocation getModelResource(TroughBlockEntity animatable) {
-        return ResourceHelper.GetModResource("geo/trough.geo.json");
+        return ResourceHelper.getModResourceLocation("geo/trough.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TroughBlockEntity animatable) {
-        return ResourceHelper.GetModResource("textures/block/entity/block_trough.png");
+        return ResourceHelper.getModResourceLocation("textures/block/entity/block_trough.png");
     }
 
     @Override
@@ -29,28 +29,30 @@ public class TroughBlockModel extends GeoModel<TroughBlockEntity> {
     public void setCustomAnimations(TroughBlockEntity animatable, long instanceId, AnimationState<TroughBlockEntity> animationState) {
         Optional<GeoBone> fluidOptional = getBone("fluid");
         Optional<GeoBone> foodOptional = getBone("food");
+        Optional<GeoBone> contentOptional = getBone("content");
 
-        if (fluidOptional.isPresent() && foodOptional.isPresent())
-        {
-            fluidOptional.get().setHidden(animatable.isEmpty());
-            foodOptional.get().setHidden(animatable.items.getStackInSlot(0).isEmpty());
-
-            convertStateToAnimation(animatable, fluidOptional.get());
-        }
+        foodOptional.ifPresent(bone -> bone.setHidden(animatable.getItemHandler().getStackInSlot(0).isEmpty()));
+        fluidOptional.ifPresent(bone -> bone.setHidden(animatable.isEmpty()));
+        contentOptional.ifPresent(bone -> convertStateToAnimation(animatable, bone));
     }
 
-    private void convertStateToAnimation(TroughBlockEntity animatable, GeoBone fluidBone)
+    private void convertStateToAnimation(TroughBlockEntity animatable, GeoBone contentBone)
     {
         int size = animatable.getSize();
 
-        switch (size)
+        if (!animatable.getItemHandler().getStackInSlot(0).isEmpty())
         {
-            case 1, 100 -> fluidBone.setPosY(-4.9f); //used -4.9f instead of -5 to fix Z-fighing
-            case 200, 300 -> fluidBone.setPosY(-4);
-            case 2, 400, 500 -> fluidBone.setPosY(-3);
-            case 600, 700 -> fluidBone.setPosY(-2);
-            case 3, 800, 900 -> fluidBone.setPosY(-1);
-            default -> fluidBone.setPosY(0);
+            switch (size)
+            {
+                case 1 -> contentBone.setPosY(-4.9f); //used -4.9f instead of -5 to fix Z-fighing
+                case 2 -> contentBone.setPosY(-3);
+                case 3 -> contentBone.setPosY(-1);
+                default -> contentBone.setPosY(0);
+            }
+            return;
         }
+        float fluidPercentage = size/1000f;
+
+        contentBone.setPosY((fluidPercentage*5)-5);
     }
 }

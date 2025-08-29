@@ -15,7 +15,7 @@ public class AllSounds {
     public static final RegistryObject<SoundEvent> SLOP_FLOW = registerSoundEvents("slop_flow");
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String name) {
-        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceHelper.GetModResource(name)));
+        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceHelper.getModResourceLocation(name)));
     }
 
     public static void register(IEventBus eventBus)

@@ -35,7 +35,7 @@ public class NoBucketRecipe extends ShapelessRecipe {
     public static class Serializer implements RecipeSerializer<NoBucketRecipe>
     {
         public static final Serializer INSTANCE = new Serializer();
-        public static final ResourceLocation ID = ResourceHelper.GetModResource("no_bucket");
+        public static final ResourceLocation ID = ResourceHelper.getModResourceLocation("no_bucket");
 
 
         @Override
