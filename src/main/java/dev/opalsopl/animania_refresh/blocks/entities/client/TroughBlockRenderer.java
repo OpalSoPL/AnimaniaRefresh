@@ -86,7 +86,8 @@ public class TroughBlockRenderer extends GeoBlockRenderer<TroughBlockEntity> {
 
 
     public class FluidRenderLayer extends GeoRenderLayer<TroughBlockEntity> {
-
+        
+        @SuppressWarnings({"unchecked"})
         public FluidRenderLayer(GeoRenderer entityRendererIn) {
             super(entityRendererIn);
         }

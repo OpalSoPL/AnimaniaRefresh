@@ -36,6 +36,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
@@ -175,9 +176,16 @@ public class TroughBlock extends BaseEntityBlock {
            {
                 return retrieveFluid(held, trough, player, interactionHand);
            }
-           else if (trough.getContentType() == EContentType.ITEM && held.isEmpty())
+           else if (held.isEmpty())
            {
-               return retrieveFood(trough, player);
+               if (player.isCrouching())
+               {
+                   return drainFluidStart(trough, state, level, pos);
+               }
+               else if (trough.getContentType() == EContentType.ITEM)
+               {
+                   return retrieveFood(trough, player);
+               }
            }
         }
 
@@ -235,6 +243,15 @@ public class TroughBlock extends BaseEntityBlock {
             }
         }
         return InteractionResult.CONSUME;
+    }
+
+    //remove fluid without giving it back.
+    private InteractionResult drainFluidStart(ITroughEntity trough, BlockState state ,Level level, BlockPos pos)
+    {
+        IFluidTank fluidTank = trough.getFluidTank();
+
+        fluidTank.drain(fluidTank.getFluid(), IFluidHandler.FluidAction.EXECUTE);
+        return InteractionResult.SUCCESS;
     }
 
     private InteractionResult addFood(ItemStack heldItem, ITroughEntity trough, Player player)

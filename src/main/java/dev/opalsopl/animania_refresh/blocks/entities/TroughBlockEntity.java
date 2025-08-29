@@ -28,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity, ITroughEntity {
     private static final TagKey<Item> TROUGH_FOODS = ItemTags.create(ResourceHelper.getModResourceLocation("trough_food"));
@@ -39,7 +39,7 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity, IT
     private final LazyOptional<IItemHandler> itemHandlerLazyOptional;
     private final LazyOptional<IFluidHandler> fluidHandlerLazyOptional;
 
-    private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private final FluidTank tank = new FluidTank(1000)//1 Bucket
     {
@@ -152,7 +152,7 @@ public class TroughBlockEntity extends BlockEntity implements GeoBlockEntity, IT
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "fluid_controller", 0, this::predicate));
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> geoAnimatableAnimationState) {
