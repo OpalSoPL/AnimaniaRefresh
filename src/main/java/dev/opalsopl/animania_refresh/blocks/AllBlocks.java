@@ -25,6 +25,11 @@ public class AllBlocks {
                     .noOcclusion()
                     .sound(SoundType.CHERRY_LEAVES)));
 
+    public static final RegistryObject<StrawBlock> SEED_CARPET_BLOCK = BLOCKS.register("seed_carpet",
+            () -> new SeedCarpetBlock(BlockBehaviour.Properties.of()
+                    .noOcclusion()
+                    .sound(SoundType.GRASS)));
+
     public static final RegistryObject<Block> TROUGH_BLOCK = BLOCKS.register("trough",
             () -> new TroughBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .noOcclusion()));
