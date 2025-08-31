@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "animania_refresh:seed_carpet",
+          "properties": {
+            "type": "wheat"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wheat_seeds"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "animania_refresh:seed_carpet",
+          "properties": {
+            "type": "beetroot"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beetroot_seeds"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "animania_refresh:seed_carpet",
+          "properties": {
+            "type": "melon"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:melon_seeds"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "animania_refresh:seed_carpet",
+          "properties": {
+            "type": "pumpkin"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:pumpkin_seeds"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "minecraft:blocks/straw"
+}
