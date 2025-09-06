@@ -26,6 +26,10 @@ public class AllItems {
     public static final RegistryObject<BlockItem> TROUGH = ITEMS.register("trough", () ->
             new BlockItem(AllBlocks.TROUGH_BLOCK.get(), new Item.Properties()));
 
+    public static final RegistryObject<BlockItem> NEST = ITEMS.register("nest", () ->
+            new BlockItem(AllBlocks.NEST_BLOCK.get(), new Item.Properties()));
+
+
 
     public static void register(IEventBus eventBus)
     {

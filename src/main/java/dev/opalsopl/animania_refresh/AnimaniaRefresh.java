@@ -2,6 +2,7 @@ package dev.opalsopl.animania_refresh;
 
 import com.mojang.logging.LogUtils;
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
+import dev.opalsopl.animania_refresh.blocks.entities.client.NestBlockRenderer;
 import dev.opalsopl.animania_refresh.blocks.entities.client.TroughBlockRenderer;
 import dev.opalsopl.animania_refresh.fluid.AllFluidTypes;
 import dev.opalsopl.animania_refresh.fluid.AllFluids;
@@ -19,7 +20,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -93,6 +93,7 @@ public class AnimaniaRefresh {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             BlockEntityRenderers.register(AllBlocks.TROUGH_BE.get(), TroughBlockRenderer::new);
+            BlockEntityRenderers.register(AllBlocks.NEST_BE.get(), NestBlockRenderer::new);
         }
     }
 }
