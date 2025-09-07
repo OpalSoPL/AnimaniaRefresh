@@ -11,7 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EggStackHandler extends ItemStackHandler {
     private static final TagKey<Item> EGGS = ItemTags.create(ResourceHelper.getModResourceLocation("forge","eggs"));
@@ -42,13 +43,28 @@ public class EggStackHandler extends ItemStackHandler {
 
     public boolean isEmpty()
     {
-        AtomicBoolean empty = new AtomicBoolean(true);
-        stacks.forEach((stack) ->
-        {
-            if (!stack.isEmpty()) empty.set(false);
-        });
+        return stacks.isEmpty();
+    }
 
-        return empty.get();
+    public int getFilledSlotsNumber()
+    {
+        return stacks.size();
+    }
+
+    public Map<Integer, Item> getFilledSlots()
+    {
+        Map<Integer, Item> items = new HashMap<>();
+        int max = Math.min(4, stacks.size());
+
+        for (int i = 0; i < max; i++)
+        {
+            ItemStack stack = stacks.get(i);
+
+            if (stack.isEmpty()) continue;
+            items.put(i, stack.getItem());
+        }
+
+        return items;
     }
 
 
