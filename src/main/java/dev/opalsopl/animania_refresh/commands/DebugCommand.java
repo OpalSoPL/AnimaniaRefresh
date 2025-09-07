@@ -3,6 +3,7 @@ package dev.opalsopl.animania_refresh.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.opalsopl.animania_refresh.blocks.entities.NestBlockEntity;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -54,11 +55,10 @@ public class DebugCommand {
         return 0;
     }
 
-    private static int setExec(CommandContext<CommandSourceStack> context)
-    {
+    private static int setExec(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getBlockPos(context, "pos");
-        Item item  = ItemArgument.getItem(context, "item").getItem();
         int count = IntegerArgumentType.getInteger(context, "count");
+        ItemStack items  = ItemArgument.getItem(context, "item").createItemStack(1, false);
 
         BlockEntity entity = context.getSource().getLevel().getBlockEntity(pos);
 
@@ -72,7 +72,7 @@ public class DebugCommand {
         {
             for (int a = count; a < 0; a++)
             {
-                int slot = nest.nestContents.getFirstSlotWithItem(item);
+                int slot = nest.nestContents.getFirstSlotWithItem(items.getItem());
 
                 if (slot == -1) return 0;
 
@@ -87,7 +87,7 @@ public class DebugCommand {
 
             if (slot == -1) return 0;
 
-            nest.nestContents.animalInsert(slot, new ItemStack(item, 1), false);
+            nest.nestContents.animalInsert(slot, items.copy(), false);
         }
         return 0;
     }
