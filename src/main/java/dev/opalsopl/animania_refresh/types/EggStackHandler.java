@@ -46,7 +46,7 @@ public class EggStackHandler extends ItemStackHandler {
         return stacks.isEmpty();
     }
 
-    public int getFilledSlotsNumber()
+    public int getCurrentSize()
     {
         return stacks.size();
     }
@@ -67,22 +67,31 @@ public class EggStackHandler extends ItemStackHandler {
         return items;
     }
 
-
-    //note: DEBUG, remove later
-    public int getFirstEmptySlot()
+    public int getFirstSlotWithItem()
     {
         for (int i = 0; i < getSlots(); i++)
         {
-            if (getStackInSlot(i).isEmpty()) return i;
+            if (!getStackInSlot(i).isEmpty()) return i;
         }
         return -1;
     }
 
+
+    //note: DEBUG, remove later
     public int getFirstSlotWithItem(Item item)
     {
         for (int i = 0; i < getSlots(); i++)
         {
             if (getStackInSlot(i).is(item)) return i;
+        }
+        return -1;
+    }
+
+    public int getFirstEmptySlot()
+    {
+        for (int i = 0; i < getSlots(); i++)
+        {
+            if (getStackInSlot(i).isEmpty()) return i;
         }
         return -1;
     }
