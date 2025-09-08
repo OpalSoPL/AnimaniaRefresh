@@ -43,7 +43,7 @@ public class EggStackHandler extends ItemStackHandler {
 
     public boolean isEmpty()
     {
-        return stacks.isEmpty();
+        return stacks.stream().allMatch(ItemStack::isEmpty);
     }
 
     public int getCurrentSize()
