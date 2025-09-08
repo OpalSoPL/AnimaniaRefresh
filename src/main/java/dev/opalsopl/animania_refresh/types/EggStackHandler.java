@@ -51,9 +51,9 @@ public class EggStackHandler extends ItemStackHandler {
         return stacks.size();
     }
 
-    public Map<Integer, Item> getFilledSlots()
+    public Map<Integer, ItemStack> getFilledSlots()
     {
-        Map<Integer, Item> items = new HashMap<>();
+        Map<Integer, ItemStack> items = new HashMap<>();
         int max = Math.min(4, stacks.size());
 
         for (int i = 0; i < max; i++)
@@ -61,7 +61,7 @@ public class EggStackHandler extends ItemStackHandler {
             ItemStack stack = stacks.get(i);
 
             if (stack.isEmpty()) continue;
-            items.put(i, stack.getItem());
+            items.put(i, stack);
         }
 
         return items;
