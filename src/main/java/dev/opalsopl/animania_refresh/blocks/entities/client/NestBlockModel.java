@@ -3,7 +3,7 @@ package dev.opalsopl.animania_refresh.blocks.entities.client;
 import dev.opalsopl.animania_refresh.blocks.entities.NestBlockEntity;
 import dev.opalsopl.animania_refresh.helper.ResourceHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -30,10 +30,7 @@ public class NestBlockModel extends GeoModel<NestBlockEntity> {
     @Override
     public void setCustomAnimations(NestBlockEntity animatable, long instanceId, AnimationState<NestBlockEntity> animationState) {
         
-        
-        if (animatable.nestContents.isEmpty()) return;
-        
-        Map<Integer, Item> content = animatable.nestContents.getFilledSlots();
+        Map<Integer, ItemStack> content = animatable.nestContents.getFilledSlots();
 
         GeoBone[] eggs = getEggBones();
 
