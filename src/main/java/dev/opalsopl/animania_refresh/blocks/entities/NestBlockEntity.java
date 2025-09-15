@@ -1,11 +1,17 @@
 package dev.opalsopl.animania_refresh.blocks.entities;
 
+import dev.opalsopl.animania_refresh.AnimaniaRefresh;
+import dev.opalsopl.animania_refresh.api.interfaces.IHatchableEgg;
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
 import dev.opalsopl.animania_refresh.types.EggStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,9 +25,13 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Map;
+import java.util.Random;
+
 public class NestBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public final EggStackHandler nestContents = new EggStackHandler(this, 4);
+    public static Random random = new Random();
 
     private final LazyOptional<IItemHandler> nestContentHandlerLazyOptional;
 
@@ -29,6 +39,29 @@ public class NestBlockEntity extends BlockEntity implements GeoBlockEntity {
         super(AllBlocks.NEST_BE.get(), pos, state);
 
         nestContentHandlerLazyOptional = LazyOptional.of(() -> nestContents);
+    }
+
+    private void tryToHatchEgg(int eggSlot)
+    {
+        if(random.nextInt(24000) < 1)
+        {
+            ItemStack egg = nestContents.extractItem(eggSlot, 1, false);
+
+            if (egg.getItem() instanceof IHatchableEgg hatchableEgg)
+            {
+                hatchableEgg.hatch(level, getBlockPos().getCenter());
+            }
+        }
+    }
+
+
+    public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T entity)
+    {
+        if (!(entity instanceof NestBlockEntity nest)) return;
+        if (nest.nestContents.isEmpty() || level.isClientSide) return;
+
+        Map<Integer, ItemStack> filled = nest.nestContents.getFilledSlots();
+        filled.forEach((id, itemStack) -> nest.tryToHatchEgg(id));
     }
 
     //Capabilities
@@ -85,10 +118,5 @@ public class NestBlockEntity extends BlockEntity implements GeoBlockEntity {
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T entity)
-    {
-        //try to hatch an egg
     }
 }
