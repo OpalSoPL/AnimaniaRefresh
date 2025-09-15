@@ -32,7 +32,7 @@ public class NestBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return box(0, 0, 0, 16, 4, 16);
+        return box(0, 0, 0, 16, 3, 16);
     }
 
     @Nullable
