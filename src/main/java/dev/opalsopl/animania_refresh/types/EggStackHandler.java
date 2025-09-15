@@ -109,8 +109,8 @@ public class EggStackHandler extends ItemStackHandler {
         return stack;
     }
 
-    public @NotNull ItemStack animalInsert(int slot, @NotNull ItemStack stack, boolean simulate)
+    public @NotNull ItemStack animalInsert(int slot, Item egg, boolean simulate)
     {
-        return super.insertItem(slot, stack, simulate);
+        return super.insertItem(slot, new ItemStack(egg), simulate);
     }
 }
