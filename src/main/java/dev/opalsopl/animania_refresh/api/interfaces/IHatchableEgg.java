@@ -8,7 +8,8 @@ import net.minecraft.world.phys.Vec3;
 
 public interface IHatchableEgg {
     IAnimalBreed getBreed();
-    Item GetEgg();
+    Item getEgg();
+    int getTint();
 
     default IAnimalSpecie getSpecie()
     {
@@ -18,9 +19,7 @@ public interface IHatchableEgg {
     default void hatch(Level level, Vec3 position)
     {
         Entity Hatchling = getBreed().getEntityType().create(level);
-
         Hatchling.moveTo(position);
-
         level.addFreshEntity(Hatchling);
     }
 }
