@@ -87,7 +87,7 @@ public class DebugCommand {
 
             if (slot == -1) return 0;
 
-            nest.nestContents.animalInsert(slot, items.copy(), false);
+            nest.nestContents.animalInsert(slot, items.getItem(), false);
         }
         return 0;
     }
