@@ -58,7 +58,7 @@ public class NestBlockRenderer extends GeoBlockRenderer<NestBlockEntity> {
         }
 
         Vector3i color = ImageHelper.intToVectorColor(egg.getTint());
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.x/255f, color.z/255f, color.y/255f, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.x/255f, color.y/255f, color.z/255f, alpha);
     }
 
     private int parseEggId(String name)
