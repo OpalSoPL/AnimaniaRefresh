@@ -4,10 +4,7 @@ import dev.opalsopl.animania_refresh.AnimaniaRefresh;
 
 import dev.opalsopl.animania_refresh.blocks.AllBlocks;
 import dev.opalsopl.animania_refresh.fluid.AllFluids;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -28,6 +25,9 @@ public class AllItems {
 
     public static final RegistryObject<BlockItem> NEST = ITEMS.register("nest", () ->
             new BlockItem(AllBlocks.NEST_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<Item> EGG_RANDOM = ITEMS.register("egg_random", () ->
+            new RandomEgg(new Item.Properties()));
 
 
 

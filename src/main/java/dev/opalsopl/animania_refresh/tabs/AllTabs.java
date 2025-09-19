@@ -5,7 +5,6 @@ import dev.opalsopl.animania_refresh.items.AllItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -18,14 +17,12 @@ public class AllTabs {
 
     public static final RegistryObject<CreativeModeTab> ENTITY_TAB = CREATIVE_TABS.register("entites_tab", ()
             -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> new ItemStack(Items.EGG))
+            .icon(() -> new ItemStack(AllItems.EGG_RANDOM.get()))
             .title(Component.translatable("tab.animania_entities.label"))
             .build());
 
     public static final RegistryObject<CreativeModeTab> RESOURCES_TAB = CREATIVE_TABS.register("resources_tab", ()
             -> CreativeModeTab.builder()
-            .withTabsBefore(ENTITY_TAB.getKey())
             .icon(() -> new ItemStack(AllItems.SLOP_BUCKET.get()))
             .title(Component.translatable("tab.animania_resources.label"))
             .build());
@@ -41,7 +38,7 @@ public class AllTabs {
         }
         else if (event.getTab() == ENTITY_TAB.get())
         {
-
+            event.accept(AllItems.EGG_RANDOM);
         }
     }
 
