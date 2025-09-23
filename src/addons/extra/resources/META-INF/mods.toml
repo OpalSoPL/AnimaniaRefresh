@@ -1,0 +1,35 @@
+modLoader = "javafml" #mandatory
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL="https://github.com/OpalSoPL/AnimaniaRefresh/issues"
+
+[[mods]] #mandatory
+modId = "${mod_id}" #mandatory
+version = "${mod_version}" #mandatory
+displayName = "${mod_name}" #mandatory
+credits = "${credits}" #optional
+authors = "${mod_authors}" #optional
+
+
+# The description text for the mod (multi line!) (#mandatory)
+description = '''${mod_description}'''
+[[dependencies."${mod_id}"]] #optional
+modId = "forge"
+mandatory = true
+versionRange = "${forge_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "${base_mod_id}"
+mandatory = true
+versionRange = "[${base_mod_version},)"
+ordering = "BEFORE"
+side = "BOTH"
