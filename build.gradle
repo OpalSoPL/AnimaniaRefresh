@@ -1,0 +1,140 @@
+buildscript {
+    repositories {
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)' apply false
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply false
+}
+
+subprojects {
+    apply plugin: 'net.minecraftforge.gradle'
+    apply plugin: 'org.parchmentmc.librarian.forgegradle'
+    apply plugin: 'org.spongepowered.mixin'
+
+    java {
+        toolchain.languageVersion = JavaLanguageVersion.of(17)
+    }
+
+    repositories {
+        // Put repositories for dependencies here
+        // ForgeGradle automatically adds the Forge maven and Maven Central for you
+
+        // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
+        // flatDir {
+        //     dir 'libs'
+        // }
+        maven {
+            // JEI
+            name "Jared's maven"
+            url "https://maven.blamejared.com/"
+        }
+        maven {
+            // JEI fallback
+            name "ModMaven"
+            url "https://modmaven.dev"
+        }
+        maven { //WTHIT
+            url "https://maven2.bai.lol"
+            content {
+                includeGroup "lol.bai"
+                includeGroup "mcp.mobius.waila"
+            }
+        }
+        maven {
+            name = 'GeckoLib'
+            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            content {
+                includeGroupByRegex("software\\.bernie.*")
+                includeGroup("com.eliotlash.mclib")
+            }
+        }
+    }
+
+    dependencies {
+        minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+        annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+        compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+        runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+        compileOnly fg.deobf("mcp.mobius.waila:wthit-api:forge-${wthitVersion}")
+        runtimeOnly fg.deobf("mcp.mobius.waila:wthit:forge-${wthitVersion}")
+
+        runtimeOnly fg.deobf("lol.bai:badpackets:forge-${badpacketsVersion}")
+
+        implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+        implementation("com.eliotlash.mclib:mclib:20")
+
+        testImplementation platform("org.junit:junit-bom:5.13.4")
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    minecraft {
+        mappings channel: mapping_channel, version: mapping_version
+        copyIdeResources = true
+
+        runs {
+            configureEach {
+                workingDirectory project.file('run')
+
+                // Recommended logging data for a userdev environment
+                // The markers can be added/remove as needed separated by commas.
+                // "SCAN": For mods scan.
+                // "REGISTRIES": For firing of registry events.
+                // "REGISTRYDUMP": For getting the contents of all registries.
+                property 'forge.logging.markers', 'REGISTRIES'
+
+
+                // Recommended logging level for the console
+                // You can set various levels here.
+                // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+                property 'forge.logging.console.level', 'debug'
+            }
+
+            data {
+                // example of overriding the workingDirectory set in configureEach above
+                workingDirectory project.file('run-data')
+            }
+
+            client {} //dummy run
+
+            runClientQuickPlay {
+                parent runs.client
+                args '--quickPlaySingleplayer', 'New World'
+                workingDirectory project.file("run")
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    }
+
+    tasks.named('jar', Jar).configure {
+        finalizedBy 'reobfJar'
+    }
+
+    test
+    {
+        useJUnitPlatform()
+    }
+
+    sourceSets.main.resources { srcDir 'src/generated/resources' }
+}

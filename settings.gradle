@@ -18,11 +18,11 @@ rootProject.name = 'animaniarefresh'
 include(":base")
 project(":base").projectDir = file("src/base")
 
-include(":addons:catsdogs")
-project(":addons:catsdogs").projectDir = file("src/addons/catsdogs")
+include(":catsdogs")
+project(":catsdogs").projectDir = file("src/addons/catsdogs")
 
-include(":addons:extra")
-project(":addons:extra").projectDir = file("src/addons/extra")
+include(":extra")
+project(":extra").projectDir = file("src/addons/extra")
 
-include(":addons:farm")
-project(":addons:farm").projectDir = file("src/addons/farm")
+include(":farm")
+project(":farm").projectDir = file("src/addons/farm")
