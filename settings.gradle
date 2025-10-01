@@ -14,3 +14,15 @@ plugins {
 }
 
 rootProject.name = 'animaniarefresh'
+
+include(":base")
+project(":base").projectDir = file("src/base")
+
+include(":catsdogs")
+project(":catsdogs").projectDir = file("src/addons/catsdogs")
+
+include(":extra")
+project(":extra").projectDir = file("src/addons/extra")
+
+include(":farm")
+project(":farm").projectDir = file("src/addons/farm")

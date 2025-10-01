@@ -1,0 +1,84 @@
+group = mod_group_id
+version = cnd_mod_version
+
+base {
+    archivesName = cnd_mod_id
+}
+
+minecraft {
+    runs {
+        // applies to all the run configs below
+        configureEach {
+            mods {
+                "${cnd_mod_id}" {
+                    source sourceSets.main
+                }
+                "${mod_id}" {
+                    source project(":base").sourceSets.main
+                }
+            }
+        }
+
+        client {
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', cnd_mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', cnd_mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', cnd_mod_id
+        }
+
+        data {
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', cnd_mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "${cnd_mod_id}.refmap.json"
+
+    //config "${mod_id}.mixins.json"
+}
+
+dependencies {
+    implementation project (":base")
+}
+
+// This block of code expands all declared replace properties in the specified resource targets.
+// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
+// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+                             forge_version       : forge_version, forge_version_range: forge_version_range,
+                             loader_version_range: loader_version_range,
+                             mod_id              : cnd_mod_id, mod_name: cnd_mod_name, mod_license: cnd_mod_license, mod_version: cnd_mod_version,
+                             mod_authors         : mod_authors, mod_description: mod_description, credits: credits,
+                             wthitVersion: wthitVersion, jei_version: jei_version, geckolib_version: geckolib_version, base_mod_id: mod_id,
+                             base_mod_version: mod_version]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+// Example for how to get properties into the manifest for reading at runtime.
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes(["Specification-Title"     : cnd_mod_id,
+                    "Specification-Vendor"    : mod_authors,
+                    "Specification-Version"   : "1", // We are version 1 of ourselves
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : project.jar.archiveVersion,
+                    "Implementation-Vendor"   : mod_authors,
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
+    }
+}
