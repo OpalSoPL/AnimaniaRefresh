@@ -8,4 +8,8 @@ public interface IAnimalBreed<T extends Entity> {
     IAnimalSpecie getSpecie();
     EntityType<T> getEntityType();
     Entity getDefaultEntity(Level level);
+
+    Entity getMale(Level level);
+    Entity getFemale(Level level);
+    Entity getChild(Level level); //genderless
 }
