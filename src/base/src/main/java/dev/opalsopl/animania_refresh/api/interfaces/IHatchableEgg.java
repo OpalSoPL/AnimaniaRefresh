@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 
 
 public interface IHatchableEgg {
-    IAnimalBreed getBreed();
+    IAnimalBreed<?> getBreed();
     Item getEgg();
     int getTint();
 
